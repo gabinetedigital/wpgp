@@ -1,0 +1,46 @@
+<div class="wrap">
+  <h2>
+    {{session.name}}: Configuration
+  </h2>
+  <table class="form-table">
+    <tbody>
+      <tr valign="top">
+        <th scope="row"><label for="blogname">Name:</label></th>
+        <td><input name="name" type="text" value="{{session.name}}" class="regular-text"></td>
+      </tr>
+      <tr valign="top">
+        <th scope="row"><label for="blogdescription">Themes:</label></th>
+        <td>
+          <select>
+            {% for theme in themes %}
+            <option name="{{theme.id}}">{{theme.name}}</option>
+            {% endfor %}
+          </select> <a href="">remove</a> <br>
+          <input name="theme" type="text" value="" class="regular-text">
+          <a href="">add</a>
+        </td>
+      </tr>
+      <tr valign="top">
+        <th scope="row"><label for="siteurl">Pairwise URL:</label></th>
+        <td><input name="pairwise-host" type="text" value="" class="regular-text code"></td>
+      </tr>
+      <tr valign="top">
+        <th scope="row"><label for="siteurl">Pairwise DB host:</label></th>
+        <td><input name="pairwise-host" type="text" value="" class="regular-text code"></td>
+      </tr>
+      <tr valign="top">
+        <th scope="row"><label for="siteurl">Pairwise DB name:</label></th>
+        <td><input name="pairwise-host" type="text" value="" class="regular-text code"></td>
+      </tr>
+      <tr valign="top">
+        <th scope="row"><label for="siteurl">Pairwise DB user:</label></th>
+        <td><input name="pairwise-host" type="text" value="" class="regular-text code"></td>
+      </tr>
+      <tr valign="top">
+        <th scope="row"><label for="siteurl">Pairwise DB pass :</label></th>
+        <td><input name="pairwise-host" type="text" value="" class="regular-text code"></td>
+      </tr>
+  </tbody></table>
+  <p class="submit">
+    <input type="submit" class="button-primary" value="Save Changes"></p>
+</div>

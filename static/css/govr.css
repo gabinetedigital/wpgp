@@ -1,0 +1,46 @@
+td.contribution div { font-size:x-small; color:#666; }
+td.contribution:hover .smenu { visibility:visible; }
+
+.smenu { font-size:x-small !important; visibility:hidden; }
+.smenu li { float:left; margin-left:10px; }
+
+div.duplications strong,
+div.children strong { clear:left; float:left; margin-right:10px; }
+
+div.duplications ul,
+div.children ul { font-size:x-small; }
+
+div.duplications ul li,
+div.children ul li { display:block; float:left; margin-right:10px;
+    line-height:200% !important; }
+
+.contribution textarea {
+    width: 100%;
+    height: 200px;
+}
+
+.wpgp-approved {
+    background-color:#e0ffd1;
+}
+
+.wpgp-disapproved {
+    background-color:#ffe6e6;
+}
+
+.wpgp-part {
+    background-color:#a9ffd1;
+}
+
+.wpgp-part .smenu {
+    visibility:visible;
+}
+
+.wpgp-status-bar {
+    position:fixed;
+    right: 10px;
+    display:none;
+}
+
+.contrib-id {
+    font-weight: bold;
+}

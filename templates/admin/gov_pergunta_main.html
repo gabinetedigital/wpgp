@@ -1,0 +1,55 @@
+<div class="wrap">
+  <h2>
+    Sessions
+    <a href="" class="add-new-h2">Add New</a>
+  </h2>
+
+  <div class="wpgp-new-session stuffbox" style="display:none">
+    <form class="form-wrap">
+      <div class="form-field">
+        <label for="title">Title</label>
+        <input type="text" name="title" style="width:518px">
+      </div>
+      <input type="button" name="OK" class="button" value="OK">
+      <input type="button" name="Cancel" class=" button" value="Cancel">
+    </form>
+  </div>
+
+  <table class="wp-list-table widefat audiences fixed"
+         cellspacing="0">
+    <thead>
+      <tr>
+        <th style="width:1%"></th>
+        <th style="width:8%">Name</th>
+        <th style="width:8%">Configure</th>
+        <th style="width:15%">Creation date</th>
+        <th style="width:10%">Number of contributions</th>
+      </tr>
+    </thead>
+    <tbody id="contrib-rows">
+      {% for session in listing %}
+      <tr>
+        <td>[<a href=""
+                class="delete-session"
+                id="{{session.id}}">X</a>]</td>
+        <td><a href="" name="{{session.id}}"
+               class="session-name">{{session.name}}</a></td>
+        <td><a href="" name="{{session.id}}"
+               class="session-config">configure</a>
+        <td>{{session.created_at|date("d/m/Y")}}</td>
+        <td>{{session.total_contributions}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <th classs="manage-column sortable desc" scope="col"></th>
+        <th classs="manage-column sortable desc" scope="col">Name</th>
+        <th classs="manage-column sortable desc" scope="col">Configure</th>
+        <th classs="manage-column sortable desc" scope="col">Creation date</th>
+        <th classs="manage-column sortable desc" scope="col">Number of contributions<Theme/th>
+      </tr>
+    </tfoot>
+  </table>
+</div>
