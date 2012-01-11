@@ -1,48 +1,6 @@
 jQuery(function() {
   var $ = jQuery;
 
-
-  //useful functions...
-  function get_row_id(tr) {
-    return parseInt(tr.attr("id").split("-")[1]);
-  }
-
-  function is_child(id) {
-    return $("#row-"+id).hasClass("is-child");
-  }
-
-  function is_parent(id) {
-    return !is_child(id);
-  }
-
-  function is_approved(id) {
-    return $("#row-"+id).hasClass('wpgp-approved');
-  }
-
-  function move_parent_row(id) {
-    var trs = $("#contrib-rows tr");
-    var tr = null;
-    for (var i = 0; i < trs.length; i++) {
-      var trid = get_row_id($(trs[i]));
-      if (trid == id) continue;
-      if (trid > id) {
-        tr = $(trs[i]);
-        break;
-      }
-    }
-    if (tr) {
-      //there is a tr bigger than id, insert ourself before it
-      tr.before($("#row-"+id).detach());
-    } else {
-      //we are the bigger id. insert after the last
-      //note: the last could also be ourself
-      var last_tr = $(trs[trs.length-1]);
-      if (get_row_id(last_tr) != id) {
-        $(trs[trs.length-1]).after($("#row-"+id).detach());
-      } //else, stay were we are, already the last
-    }
-  }
-
   //event binder
   function inliner(dbfield, accessor, editable) {
     var original_text;
@@ -151,7 +109,7 @@ jQuery(function() {
   $(".wpgp-status").change(function() {
     var self = $(this);
     var id = self.attr("name");
-    var current = $("#contrib-status-val").attr("value");
+    var current = $("#contrib-status-val-"+id).val();
     var newvalue = self.val();
     if(confirm("Change the status?")) {
       var data = {id:id,field:'status', 'value': newvalue};
@@ -172,7 +130,7 @@ jQuery(function() {
     }
   });
 
-  //TODO: changing 'duplicate'
+  //changing 'duplicate'
   $(".contrib-duplicates").change(function() {
     var self = $(this);
     var id = /\[([0-9]+)\]/.exec(self.attr("id"))[1];
@@ -272,7 +230,7 @@ jQuery(function() {
   $(".wpgp-theme").change(function() {
     var self = $(this);
     var id = self.attr("name");
-    var current = $("#contrib-theme-val").attr("value");
+    var current = $("#contrib-theme-val-"+id).val();
     var newvalue = self.find(":selected").attr("name");
     if(confirm("Change the theme?")) {
       var data = {id:id,field:'theme_id', 'value': newvalue};
@@ -306,8 +264,6 @@ jQuery(function() {
           return this.attr('value');
       },
       $("<input type='text'/>")));
-
-  //TODO: changing part of
 
   $(".wp-list-table").show();
   $(".wp-list-table-loading").hide();

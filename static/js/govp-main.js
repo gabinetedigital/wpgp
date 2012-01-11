@@ -20,7 +20,7 @@ jQuery(function () {
       $.ajax({
         url: 'admin-ajax.php',
         type: 'post',
-        data: {action:'create_session',
+        data: {action:'govp_create_session',
                data:{session_name:session_name}},
         success: function(data) {
           done();
@@ -37,7 +37,7 @@ jQuery(function () {
       $.ajax({
         url: 'admin-ajax.php',
         type: 'post',
-        data: {action:'delete_session',
+        data: {action:'govp_delete_session',
                data:{session_id:id}},
         success: function(data) {
           done();

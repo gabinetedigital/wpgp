@@ -5,42 +5,46 @@
   <table class="form-table">
     <tbody>
       <tr valign="top">
-        <th scope="row"><label for="blogname">Name:</label></th>
-        <td><input name="name" type="text" value="{{session.name}}" class="regular-text"></td>
+        <th scope="row"><label for=" name">Name:</label></th>
+        <td><input id="name" type="text" value="{{session.name}}" class="regular-text"></td>
       </tr>
       <tr valign="top">
-        <th scope="row"><label for="blogdescription">Themes:</label></th>
+        <th scope="row">Themes:</th>
         <td>
-          <select>
+          <select id="theme" class="themes-list">
             {% for theme in themes %}
-            <option name="{{theme.id}}">{{theme.name}}</option>
+            <option value="{{theme.id}}">{{theme.name}}</option>
             {% endfor %}
-          </select> <a href="">remove</a> <br>
-          <input name="theme" type="text" value="" class="regular-text">
-          <a href="">add</a>
+          </select>
+          <a class="remove-theme" href="">remove</a> <br>
+          <input id="new-theme" type="text" value="" class="regular-text">
+          <a id="add-theme" href="">add</a>
         </td>
       </tr>
       <tr valign="top">
         <th scope="row"><label for="siteurl">Pairwise URL:</label></th>
-        <td><input name="pairwise-host" type="text" value="" class="regular-text code"></td>
+        <td><input id="pairwise-url" type="text" value="{{session.pairwise_url}}" class="regular-text code"></td>
       </tr>
       <tr valign="top">
         <th scope="row"><label for="siteurl">Pairwise DB host:</label></th>
-        <td><input name="pairwise-host" type="text" value="" class="regular-text code"></td>
+        <td><input id="pairwise-host" type="text" value="{{session.pairwise_db_host}}" class="regular-text code"></td>
       </tr>
       <tr valign="top">
         <th scope="row"><label for="siteurl">Pairwise DB name:</label></th>
-        <td><input name="pairwise-host" type="text" value="" class="regular-text code"></td>
+        <td><input id="pairwise-name" type="text" value="{{session.pairwise_db_name}}" class="regular-text code"></td>
       </tr>
       <tr valign="top">
         <th scope="row"><label for="siteurl">Pairwise DB user:</label></th>
-        <td><input name="pairwise-host" type="text" value="" class="regular-text code"></td>
+        <td><input id="pairwise-user" type="text" value="{{session.pairwise_db_user}}" class="regular-text code"></td>
       </tr>
       <tr valign="top">
         <th scope="row"><label for="siteurl">Pairwise DB pass :</label></th>
-        <td><input name="pairwise-host" type="text" value="" class="regular-text code"></td>
+        <td><input id="pairwise-pass" type="text" value="{{session.pairwise_db_pass}}" class="regular-text code"></td>
       </tr>
   </tbody></table>
   <p class="submit">
-    <input type="submit" class="button-primary" value="Save Changes"></p>
+    <input id="save"
+           type="button"
+           class="button-primary "
+           value="Save Changes"></p>
 </div>

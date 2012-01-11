@@ -20,7 +20,7 @@ function wpgp_show_gov_responde() {
     function show_themes() {
         $renderer = wpgp_renderer();
         $ctx = array();
-        $ctx['listing'] = wpgp_db_get_themes();
+        $ctx['listing'] = wpgp_db_govr_get_themes();
         echo $renderer->render('admin/gov_responde_main.html', $ctx);
     }
 
@@ -30,21 +30,21 @@ function wpgp_show_gov_responde() {
         $page = (int) (isset($_GET["paged"]) ? $_GET["paged"] : '1');
 
         list($ctx['listing'],$ctx['count'])
-            = wpgp_db_get_theme_contribs($_GET['theme_id']
-                                         , $page-1
-                                         , $_GET["sort"]
-                                         , $_GET['from']
-                                         , $_GET['to']
-                                         , $_GET['status']
-                                         );
+            = wpgp_db_govr_get_theme_contribs($_GET['theme_id']
+                                              , $page-1
+                                              , $_GET["sort"]
+                                              , $_GET['from']
+                                              , $_GET['to']
+                                              , $_GET['status']
+                                              );
 
-        $ctx['theme'] = wpgp_db_get_theme($_GET['theme_id']);
-        $ctx['themes'] = wpgp_db_get_themes();
+        $ctx['theme'] = wpgp_db_govr_get_theme($_GET['theme_id']);
+        $ctx['themes'] = wpgp_db_govr_get_themes();
         $ctx['s'] = $_GET['s'];
         $ctx['from'] = $_GET['from'];
         $ctx['to'] = $_GET['to'];
         $ctx['status'] = $_GET['status'];
-        $ctx['total_count'] = wpgp_db_get_contrib_count();
+        $ctx['total_count'] = wpgp_db_govr_get_contrib_count();
         $ctx['siteurl'] = get_bloginfo('siteurl');
         $ctx['sortby'] = get_query_var("sort");
         $ctx['paged'] =  $page;
@@ -65,33 +65,44 @@ function wpgp_show_gov_responde() {
     }
 }
 
+
 function wpgp_show_gov_pergunta() {
     function show_sessions() {
         $renderer = wpgp_renderer();
         $ctx = array();
-        $ctx['listing'] = wpgp_db_get_sessions();
+        $ctx['listing'] = wpgp_db_govp_get_sessions();
         echo $renderer->render('admin/gov_pergunta_main.html', $ctx);
     }
 
     function show_session_configuration() {
         $renderer = wpgp_renderer();
         $ctx = array();
+        $ctx['session'] = wpgp_db_govp_get_session($_GET['session_id']);
+        $ctx['themes'] = wpgp_db_govp_get_themes($_GET['session_id']);
         echo $renderer->render('admin/gov_pergunta_config.html', $ctx);
     }
 
     function show_contributions() {
+        $session_id = $_GET['session_id'];
+
         $renderer = wpgp_renderer();
         $ctx = array();
         $page = (int) (isset($_GET["paged"]) ? $_GET["paged"] : '1');
 
         list($ctx['listing'],$ctx['count'])
-            = wpgp_db_get_session_contribs($_GET['session_id'], $page-1);
+            = wpgp_db_govp_get_session_contribs($session_id,
+                                                $page-1,
+                                                $_GET['sort'],
+                                                $_GET['theme_id'],
+                                                $_GET['status']);
 
-        $ctx['theme'] = wpgp_db_get_session($_GET['session_id']);
-        $ctx['themes'] = wpgp_db_get_themes();
+        $ctx['theme_id'] = $_GET['theme_id'];
+        $ctx['themecounts'] = wpgp_db_get_theme_counts($session_id);
+        $ctx['themes'] = wpgp_db_govp_get_themes($session_id);
+        $ctx['session'] = wpgp_db_govp_get_session($session_id);
         $ctx['s'] = $_GET['s'];
         $ctx['status'] = $_GET['status'];
-        $ctx['total_count'] = wpgp_db_get_contribs();
+        $ctx['total_count'] = wpgp_db_govp_get_contrib_count($session_id);
         $ctx['siteurl'] = get_bloginfo('siteurl');
         $ctx['sortby'] = get_query_var("sort");
         $ctx['paged'] =  $page;
@@ -113,6 +124,7 @@ function wpgp_show_gov_pergunta() {
         show_sessions();
     }
 }
+
 
 function wpgp_admin_menu() {
     $rootslug = __FILE__;
@@ -141,6 +153,9 @@ function wpgp_admin_menu() {
                 wp_enqueue_script('wpgp-govp',
                                   plugins_url("static/js/govp${sufix}.js",
                                               __FILE__));
+                wp_enqueue_style(
+                                 'wpgp-govr-css',
+                                 plugins_url('static/css/govp.css', __FILE__));
                 break;
             case $govr:
                 wp_enqueue_script(

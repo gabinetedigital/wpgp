@@ -29,13 +29,15 @@ define('WPGP_GOVR_CONTRIB_TABLE','wpgp_govr_contribs');
 define('WPGP_GOVR_CONTRIBC_TABLE', 'wpgp_govr_contrib_children');
 define('WPGP_GOVP_SESSION_TABLE','wpgp_govp_sessions');
 define('WPGP_GOVP_CONTRIB_TABLE','wpgp_govp_contribs');
+define('WPGP_GOVP_CONTRIBC_TABLE', 'wpgp_govp_contrib_children');
 define('WPGP_GOVP_THEME_TABLE','wpgp_govp_themes');
 
 define('WPGP_CONTRIBS_PER_PAGE', 50);
 
 include_once('wpgp.templating.php');
 include_once('wpgp.util.php');
-include_once('wpgp.db.php');
+include_once('wpgp.db.govr.php');
+include_once('wpgp.db.govp.php');
 include_once('wpgp.admin.panel.php');
 include_once('wpgp.ajax.govr.php');
 include_once('wpgp.ajax.govp.php');
@@ -67,11 +69,12 @@ function wpgp_install() {
       deleted int default 0,
       parent int default 0,
       created_by_moderation int default 0,
+      score float default 0,
       UNIQUE KEY id (id)
     );
     CREATE TABLE ". WPGP_GOVR_CONTRIBC_TABLE. " (
       inverse_id int not null,
-      children_id int not null
+      children_id int not null,
       PRIMARY KEY (inverse_id,children_id),
       KEY contrib_children_inverse_fk (children_id)
     );
@@ -84,7 +87,7 @@ function wpgp_install() {
       pairwise_db_host varchar(1000),
       pairwise_db_name varchar(1000),
       pairwise_db_user varchar(1000),
-      pairwise_dv_pass varchar(1000),
+      pairwise_db_pass varchar(1000),
       UNIQUE KEY id (id)
     );
     CREATE TABLE " . WPGP_GOVP_THEME_TABLE . " (
@@ -101,13 +104,21 @@ function wpgp_install() {
       user_id int(11) NOT NULL,
       original text,
       created_at datetime,
-      status enum('pending','blocked','approved','responded') default 'pending',
+      status enum('pending','approved') default 'pending',
       deleted int default 0,
       parent int default 0,
       created_by_moderation int default 0,
+      score float default 0,
       UNIQUE KEY id (id)
+    );
+    CREATE TABLE ". WPGP_GOVP_CONTRIBC_TABLE. " (
+      inverse_id int not null,
+      children_id int not null,
+      PRIMARY KEY (inverse_id,children_id),
+      KEY contrib_children_inverse_fk (children_id)
     );";
 
+    error_log($sql);
     $wpdb->query ($sql);
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
@@ -118,13 +129,15 @@ function wpgp_uninstall() {
     $role_object = get_role('administrator');
     $role_object->remove_cap('moderate_contrib');
 
-    //...really, don't drop it
+    /* //...really, don't drop it */
     /* global $wpdb; */
     /* $wpdb->query ("DROP TABLE IF EXISTS ".WPGP_GOVR_THEME_TABLE); */
     /* $wpdb->query ("DROP TABLE IF EXISTS ".WPGP_GOVR_CONTRIB_TABLE); */
     /* $wpdb->query ("DROP TABLE IF EXISTS ".WPGP_GOVP_SESSION_TABLE); */
     /* $wpdb->query ("DROP TABLE IF EXISTS ".WPGP_GOVP_CONTRIB_TABLE); */
     /* $wpdb->query ("DROP TABLE IF EXISTS ".WPGP_GOVP_THEME_TABLE); */
+    /* $wpdb->query ("DROP TABLE IF EXISTS ".WPGP_GOVR_CONTRIBC_TABLE); */
+    /* $wpdb->query ("DROP TABLE IF EXISTS ".WPGP_GOVP_CONTRIBC_TABLE); */
 }
 
 register_activation_hook(__FILE__, 'wpgp_install');

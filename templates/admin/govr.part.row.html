@@ -1,6 +1,6 @@
-{% macro row(contrib, themes, klass) %}
+{% macro row(contrib, theme, themes, klass) %}
 
-<tr class="{{ exec("wpgp__get_class", contrib) }} {{ klass }}" id="row-{{ contrib.id }}">
+<tr class="{{ exec("wpgp__govr_get_class", contrib) }} {{ klass }}" id="row-{{ contrib.id }}">
 
   <td class="contrib-id">
     <a class="delete-contrib" href="" name="{{contrib.id}}">X</a>
@@ -8,8 +8,11 @@
   </td>
 
   <td class="contrib-status"
-      id="contrib-status[{{contrib.id}}]">
-    <input type="hidden" id="contrib-status-val" value="{{contrib.status}}">
+      id="contrib-status[{{contrib.id}}]"
+      name="{{contrib.id}}">
+    <input type="hidden"
+           name="contrib-status-val-{{contrib.id}}"
+           value="{{contrib.status}}">
       <select name="{{contrib.id}}" class="wpgp-status">
         <option {% if contrib.status == 'pending' %}
                 selected
@@ -26,6 +29,7 @@
       </select>
   </td>
 
+
   <td>
     {% if contrib.created_by_moderation == 0 %}
     <input
@@ -37,7 +41,9 @@
 
   <td id="contrib-theme[{{contrib.id}}]"
       class="contrib-theme">
-    <input type="hidden" id="contrib-theme-val" value="{{contrib.theme_id}}">
+    <input type="hidden"
+           id="contrib-theme-val-{{contrib.id}}"
+           value="{{theme.name}}">
     <select
        class="wpgp-theme wpgp-the-theme[{{contrib.theme_id}}]"
        name="{{contrib.id}}" name="theme">
@@ -66,18 +72,18 @@
       <label>
         <strong>Part of:</strong>
         <input
-           default="{{ exec("wpgp__get_part_string", contrib) }}"
+           default="{{ exec("wpgp__govr_get_part_string", contrib) }}"
            type="text" id="contrib-part[{{ contrib.id }}]"
            class="contrib-parts contrib-part[{{ contrib.part }}]"
-           value="{{ exec("wpgp__get_parents_string", contrib) }}">
+           value="{{ exec("wpgp__govr_get_parents_string", contrib) }}">
       </label>
     </div>
 
-    {% if exec("wpgp_contrib_has_duplicates", contrib) %}
+    {% if exec("wpgp_govr_contrib_has_duplicates", contrib) %}
     <div class="duplications">
       <strong>Duplications:</strong>
       <ul>
-        {% for i in exec("wpgp_contrib_get_duplicates", contrib) %}
+        {% for i in exec("wpgp_govr_contrib_get_duplicates", contrib) %}
         <li><a href="#">#{{ i.id }}</a></li>
         {% endfor %}
       </ul>
@@ -86,11 +92,11 @@
 
     {% endif %}
 
-    {% if exec("wpgp_contrib_has_children", contrib) %}
+    {% if exec("wpgp_govr_contrib_has_children", contrib) %}
     <div class="children">
       <strong>Children:</strong>
       <ul>
-        {% for i in exec("wpgp_contrib_get_children", contrib) %}
+        {% for i in exec("wpgp_govr_contrib_get_children", contrib) %}
         <li><a href="#">#{{ i.id }}</a></li>
         {% endfor %}
       </ul>

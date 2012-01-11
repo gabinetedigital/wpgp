@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
 
- * Helper function to get the proper css class of a contribution row
+/**
+ * Govr Helper function to get the proper css class of a contribution row
  */
-function wpgp__get_class($contrib) {
+function wpgp__govr_get_class($contrib) {
     $klass = array();
     if ($contrib['parent'] > 0) {
         array_push($klass, "is-duplicated");
         array_push($klass, "duplication-of-${contrib[parent]}");
-    } else if (wpgp_contrib_get_parents($contrib)){
+    } else if (wpgp_govr_contrib_get_parents($contrib)){
         array_push($klass, "wpgp-part");
     } else {
         if ($contrib['status'] == 'approved') {
@@ -35,17 +35,55 @@ function wpgp__get_class($contrib) {
     return join(" ", $klass);
 }
 
-function wpgp__get_parents_string($contrib) {
+function wpgp__govr_get_parents_string($contrib) {
     $parents = array();
-    foreach (wpgp_contrib_get_parents($contrib) as $c) {
+    foreach (wpgp_govr_contrib_get_parents($contrib) as $c) {
         array_push($parents, $c['id']);
     }
     return join(" ", $parents);
 }
 
-function wpgp__get_part_string($contrib) {
+function wpgp__govr_get_part_string($contrib) {
     $parts = array();
-    foreach (wpgp_contrib_get_children($contrib) as $c) {
+    foreach (wpgp_govr_contrib_get_children($contrib) as $c) {
+        array_push($parts, $c['id']);
+    }
+    return join(" ", $parts);
+}
+
+
+
+/**
+ * Govp Helper function to get the proper css class of a contribution row
+ */
+function wpgp__govp_get_class($contrib) {
+    $klass = array();
+    if ($contrib['parent'] > 0) {
+        array_push($klass, "is-duplicated");
+        array_push($klass, "duplication-of-${contrib[parent]}");
+    } else if (wpgp_govp_contrib_get_parents($contrib)){
+        array_push($klass, "wpgp-part");
+    } else {
+        if ($contrib['status'] == 'approved') {
+            array_push($klass, "wpgp-approved");
+        } else {
+            array_push($klass, "wpgp-disapproved");
+        }
+    }
+    return join(" ", $klass);
+}
+
+function wpgp__govp_get_parents_string($contrib) {
+    $parents = array();
+    foreach (wpgp_govp_contrib_get_parents($contrib) as $c) {
+        array_push($parents, $c['id']);
+    }
+    return join(" ", $parents);
+}
+
+function wpgp__govp_get_part_string($contrib) {
+    $parts = array();
+    foreach (wpgp_govr_contrib_get_children($contrib) as $c) {
         array_push($parts, $c['id']);
     }
     return join(" ", $parts);

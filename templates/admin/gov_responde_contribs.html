@@ -56,10 +56,10 @@
       </label>
       |
       <label>
-        {% if status == 0 or status == '' %}
+        {% if status == '' %}
         <strong>All</strong>
         {% else %}
-        <a href="{{ pageurl }}&status=0">All</a>
+        <a href="{{ pageurl }}&status=">All</a>
         {% endif %}
       </label>
     </div>
@@ -91,7 +91,7 @@
          cellspacing="0">
     <thead>
       <tr>
-        <th style="width:3%"><a href="{{pageurl}}&sort=id">ID</a></th>
+        <th style="width:10%"><a href="{{pageurl}}&sort=id">ID</a></th>
         <th style="width:10%"><a href="{{pageurl}}&sort=status">Status</a></th>
         <th style="width:8%">Duplicate</th>
         <th style="width:10%"><a href="{{pageurl}}&sort=theme">Theme</a></th>
@@ -104,7 +104,7 @@
     </thead>
     <tbody id="contrib-rows">
       {% for contrib in listing %}
-        {{ rows.row(contrib, themes) }}
+        {{ rows.row(contrib, theme, themes) }}
       {% endfor %}
     </tbody>
 

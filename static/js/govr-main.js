@@ -1,5 +1,3 @@
-function slow_operation(fn) { fn(new Function) }
-
 jQuery(function () {
   var $ = jQuery;
 
