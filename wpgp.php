@@ -53,7 +53,7 @@ function wpgp_install() {
     global $wpdb;
     $sql = "CREATE TABLE " . WPGP_GOVR_THEME_TABLE . " (
       id int NOT NULL AUTO_INCREMENT,
-      name varchar(10) NOT NULL,
+      name varchar(1000) NOT NULL,
       created_at DATETIME,
       UNIQUE KEY id (id)
     );
