@@ -70,6 +70,7 @@ function wpgp_install() {
       parent int default 0,
       created_by_moderation int default 0,
       score float default 0,
+      resposta text,
       UNIQUE KEY id (id)
     );
     CREATE TABLE ". WPGP_GOVR_CONTRIBC_TABLE. " (
