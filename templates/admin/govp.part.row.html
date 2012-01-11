@@ -1,0 +1,107 @@
+{% macro row(contrib, themes, klass) %}
+
+<tr class="{{ exec("wpgp__govp_get_class", contrib) }} {{ klass }}" id="row-{{ contrib.id }}">
+
+  <td class="contrib-id">
+    <a class="delete-contrib" href="" name="{{contrib.id}}">X</a>
+    {{ contrib.id }}
+  </td>
+
+  <td class="contrib-status"
+      id="contrib-status[{{contrib.id}}]">
+    <input
+       type="hidden"
+       id="contrib-status-val-{{contrib.id}}"
+       value="{{contrib.status}}">
+      <select name="{{contrib.id}}" class="wpgp-status">
+        <option {% if contrib.status == 'pending' %}
+                selected
+                {% endif %}>pending</option>
+        <option {% if contrib.status == 'approved' %}
+                selected
+                {% endif %}>approved</option>
+      </select>
+  </td>
+
+  <td>
+    {% if contrib.created_by_moderation == 0 %}
+    <input
+       type="text" id="contrib-duplicate[{{contrib.id}}]"
+       class="contrib-duplicates contrib-duplicate[{{contrib.parent}}]"
+       value="{{ contrib.parent }}" style="width:95%">
+    {% endif %}
+  </td>
+
+  <td id="contrib-theme[{{contrib.id}}]"
+      class="contrib-theme">
+    <input type="hidden"
+           id="contrib-theme-val-{{contrib.id}}"
+           value="{{contrib.theme_name}}">
+    <select
+       class="wpgp-theme wpgp-the-theme[{{contrib.theme_id}}]"
+       name="{{contrib.id}}" name="theme">
+      {% for theme in themes %}
+      <option
+         name="{{theme.id}}"
+         {% if contrib.theme_id == theme.id %} selected {% endif %}>
+        {{theme.name}}
+      </option>
+     {% endfor %}
+    </select>
+  </td>
+
+  <td id="contrib-title[{{contrib.id}}]"
+      class="contribution-title"><p>{{ contrib.title }}</p></td>
+  <td id="contrib[{{contrib.id}}]"
+      class="contribution">
+    <p>{{ contrib.content }}</p>
+
+    {% if contrib.parent > 0 %}
+    <div class="parent">
+      <strong>Parent:</strong> #{{ contrib.parent }}
+    </div>
+    {% else %}
+    <div class="smenu">
+      <label>
+        <strong>Part of:</strong>
+        <input
+           default="{{ exec("wpgp__govp_get_part_string", contrib) }}"
+           type="text" id="contrib-part[{{ contrib.id }}]"
+           class="contrib-parts contrib-part[{{ contrib.part }}]"
+           value="{{ exec("wpgp__govp_get_parents_string", contrib) }}">
+      </label>
+    </div>
+
+    {% if exec("wpgp_govp_contrib_has_duplicates", contrib) %}
+    <div class="duplications">
+      <strong>Duplications:</strong>
+      <ul>
+        {% for i in exec("wpgp_govp_contrib_get_duplicates", contrib) %}
+        <li><a href="#">#{{ i.id }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% endif %}
+
+    {% if exec("wpgp_govp_contrib_has_children", contrib) %}
+    <div class="children">
+      <strong>Children:</strong>
+      <ul>
+        {% for i in exec("wpgp_govp_contrib_get_children", contrib) %}
+        <li><a href="#">#{{ i.id }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </td>
+  <td>
+    <a href="{{siteurl}}/wp-admin/user-edit.php?user_id={{ contrib.user_id }}">
+      {{ contrib.display_name }}
+    </a>
+  </td>
+  <td>{{ contrib.created_at|date("d/m/Y") }}</td>
+</tr>
+
+{% endmacro %}

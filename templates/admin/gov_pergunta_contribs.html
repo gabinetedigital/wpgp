@@ -1,0 +1,147 @@
+{% import "admin/govp.part.row.html" as rows %}
+<div class="wrap">
+
+  <h2>
+    Contributions
+    <a href="" class="add-new-h2">Add New</a>
+  </h2>
+
+  <ul class="subsubsub">
+    <li>
+      <a {% if theme_id == '' %}class="current"{% endif %}
+         href="{{ pageurl }}&theme_id=">
+        All <span class="count">({{ total_count }})</span> |
+      </a>
+    </li>
+
+    {% for theme in themes %}
+    <li>
+      <a href="{{ pageurl }}&theme_id={{ theme.id }}"
+         {% if theme_id == theme.id %}class="current"{% endif %}>
+        {{ theme.name }}
+        <span class="count">({{ theme.total_contributions }})</span>
+      </a>
+
+      {% if loop.index != themes|length %}|{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <form
+     id="search" method="get" action="{{ pageurl }}"
+     onsubmit="window.location.href+='&s='+document.forms.search.s.value; return false">
+    <p class="search-box">
+      <label class="screen-reader-text" for="search-input">
+        Search Colaborations:
+      </label>
+      <input type="text" id="search_input" name="s" value="{{ s }}">
+      <input
+         type="submit" name="" id="search-submit" class="button"
+         value="Search">
+    </p>
+  </form>
+
+  <div class="tablenav top">
+    <div class="alignright actions">
+      <label>
+        {% if status == 1 %}
+        <strong>Approved</strong>
+        {% else %}
+        <a href="{{ pageurl }}&status=1">Approved</a>
+        {% endif %}
+      </label>
+      |
+      <label>
+        {% if status == -1 %}
+        <strong>Not approved</strong>
+        {% else %}
+        <a href="{{ pageurl }}&status=-1">Not approved</a>
+        {% endif %}
+      </label>
+      |
+      <label>
+        {% if status == '' %}
+        <strong>All</strong>
+        {% else %}
+        <a href="{{ pageurl }}&status=">All</a>
+        {% endif %}
+      </label>
+    </div>
+  </div>
+
+  <div class="wpgp-new-contrib stuffbox" style="display:none">
+    <form class="form-wrap">
+      <div class="form-field">
+        <label for="theme">Theme</label>
+        <select class="wpgp-theme" name="theme">
+          {% for theme in themes %}
+          <option value="{{theme.id}}">{{theme.name}}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="title">Title</label>
+        <input type="text" name="title" style="width:518px">
+      </div>
+      <div class="form-field">
+        <label for="content">Content</label>
+        <textarea name="content" style="width:500px;height:200px"
+                  maxlength="600"> </textarea>
+      </div>
+      <div class="form-field">
+        <label for="part">Part of</label>
+        <input type="text" name="part" style="width:518px">
+      </div>
+      <input type="button" name="OK" class="button" value="OK">
+      <input type="button" name="Cancel" class=" button" value="Cancel">
+    </form>
+  </div>
+
+  <div class="wpgp-status-bar">loading...</div>
+  <div class="wp-list-table-loading">Loading contributions...</div>
+  <table class="wp-list-table widefat fixed audiences" style="display:none"
+         cellspacing="0">
+    <thead>
+      <tr>
+        <th style="width:10%"><a href="{{pageurl}}&sort=id">ID</a></th>
+        <th style="width:10%"><a href="{{pageurl}}&sort=status">Status</a></th>
+        <th style="width:8%">Duplicate</th>
+        <th style="width:10%"><a href="{{pageurl}}&sort=theme">Theme</a></th>
+        <th style="width:15%"><a href="{{pageurl}}&sort=title">Title</a></th>
+        <th>Content</th>
+        <th style="width:10%"><a href="{{pageurl}}&sort=author">Author</a></th>
+        <th class="column-date" style="width:8%">
+          <a href="{{pageurl}}&sort=date">Creation date</a></th>
+      </tr>
+    </thead>
+    <tbody id="contrib-rows">
+      {% for contrib in listing %}
+        {{ rows.row(contrib, themes) }}
+      {% endfor %}
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <th classs="manage-column sortable desc" scope="col">ID</th>
+        <th classs="manage-column sortable desc" scope="col">Status</th>
+        <th classs="manage-column sortable desc" scope="col">Duplicate of</th>
+        <th classs="manage-column sortable asc" scope="col">Theme</th>
+        <th classs="manage-column sortable desc" scope="col">Title</th>
+        <th classs="manage-column sortable asc" scope="col">Content</th>
+        <th classs="manage-column sortable desc" scope="col">Author</th>
+        <th classs="manage-column sortable desc" scope="col">Creation Date</th>
+      </tr>
+    </tfoot>
+  </table>
+  {% if paged > 1 %}
+  <a href="{{pageurl}}&paged={{paged-1}}">previous</a>
+  {% else %}
+  previous
+  {% endif %}
+  ({{paged}}/{{numpages}})
+  {% if numpages >  (paged) %}
+    <a href="{{pageurl}}&paged={{paged+1}}">next</a>
+  {% else %}
+    next
+  {% endif %}
+</div>
