@@ -1,7 +1,7 @@
 /* Copyright (C) 2011  Governo do Estado do Rio Grande do Sul
  *
  *   Author: Lincoln de Sousa <lincoln@gg.rs.gov.br>
- *
+ *           Thiago Silva     <thiago@metareload.com>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
