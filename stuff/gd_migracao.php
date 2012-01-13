@@ -10,6 +10,12 @@ define('NPASS', '');
 define('NNAME', 'gd');
 
 
+define('PHOST', 'localhost');
+define('PUSER', 'root');
+define('PPASS', '');
+define('PNAME', 'pairwise');
+
+
 $status = array('A' => 'approved',
                 'B' => 'blocked',
                 'J' => 'pending',//'Juntada',
@@ -18,6 +24,23 @@ $status = array('A' => 'approved',
 
 $oldlink = null;
 $newlink = null;
+
+$pairwise_link = null;
+
+function pairwise_link() {
+  global $pairwise_link;
+  if ($pairwise_link) return $pairwise_link;
+
+  $link = mysql_connect(PHOST, PUSER, PPASS, true);
+  if(!$link) throw new Exception(mysql_error($link));
+
+  if (!mysql_select_db(PNAME, $link)) {
+    throw new Exception(mysql_error($link));
+  }
+  return $pairwise_link = $link;
+}
+
+
 function get_old_link() {
   global $oldlink;
   if ($oldlink) return $oldlink;
@@ -111,6 +134,110 @@ function import_contrib($usermap) {
   }
 }
 
-import_themes();
-import_contrib(import_users());
+function govr() {
+  import_themes();
+  import_contrib(import_users());
+}
+
+function govp() {
+  //mysql_set_charset("utf8", get_new_link());
+  //die(mysql_client_encoding(get_new_link()));
+
+
+  //inserting Saude session
+  $sql = "INSERT INTO wpgp_govp_sessions (name, created_at)
+          VALUES ('".utf8_decode('Saúde')."', now())";
+
+  if (!mysql_query($sql, get_new_link())) {
+    throw new Exception(mysql_error(get_new_link()));
+  }
+
+  //pairwise choices:
+  $choices = array();
+  foreach(get_results(pairwise_link(), 'SELECT * FROM choices') as $c) {
+      $json = json_decode($c['data']);
+      $choices[$json->id] = $c['score'];
+  }
+
+  $session_id = mysql_insert_id(get_new_link());
+
+  //...its themes
+  $themes = array('cuidado' => 1,
+                  'familia' => 2,
+                  'emergencia' => 3,
+                  'medicamentos' => 4,
+                  'regional' => 5);
+  foreach($themes as $t => $id) {
+    $sql = "INSERT INTO wpgp_govp_themes (id, session_id, name) VALUES
+          ($id, '$session_id','$t')";
+    if (!mysql_query($sql, get_new_link())) {
+      throw new Exception(mysql_error(get_new_link()));
+    }
+  }
+
+  //its contribs
+
+  foreach(get_results(get_new_link(),"SELECT * FROM contrib") as $c) {
+    $theme_id = $themes[$c['theme']];
+    $status = $c['status'] == 0 ? 'pending' : 'approved';
+
+    if ($c['status'] == 1) {
+      $score = $choices[$c['id']];
+    } else {
+      $score = 0;
+    }
+
+    $content = utf8_decode(addslashes($c['content']));
+    $title = utf8_decode(addslashes($c['title']));
+    $original = utf8_decode(addslashes($c['original']
+                                       ? $c['original'] : $c['content']));
+
+    $sql = "INSERT INTO wpgp_govp_contribs
+            (id,
+             title,
+             theme_id,
+             content,
+             user_id,
+             original,
+             created_at,
+             status,
+             parent,
+             created_by_moderation,
+             score)
+            VALUES
+            ($c[id],
+             '$title',
+             '$theme_id',
+             '$content',
+             '$c[user_id]',
+             '$original',
+             '$c[creation_date]',
+             '$status',
+             '$c[parent]',
+             '$c[moderation]',
+             '$score')";
+
+    echo "$sql\n\n--\n";
+
+    if (!mysql_query($sql, get_new_link())) {
+      throw new Exception(mysql_error(get_new_link()));
+    }
+  }
+
+  //childs
+  foreach(get_results(get_new_link(),
+                      'SELECT * FROM  contrib_children__contrib' )
+          as $c) {
+    $sql = "INSERT INTO wpgp_govp_contrib_children
+            (inverse_id, children_id)
+             VALUES
+            ($c[inverse_id], $c[children_id])";
+  }
+    if (!mysql_query($sql, get_new_link())) {
+      throw new Exception(mysql_error(get_new_link()));
+    }
+}
+
+govr();
+govp();
 ?>

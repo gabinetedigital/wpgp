@@ -56,7 +56,7 @@ function wpgp_install() {
       name varchar(1000) NOT NULL,
       created_at DATETIME,
       UNIQUE KEY id (id)
-    );
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
     CREATE TABLE " . WPGP_GOVR_CONTRIB_TABLE . " (
       id int NOT NULL AUTO_INCREMENT,
       title varchar(1000) NOT NULL,
@@ -72,13 +72,13 @@ function wpgp_install() {
       score float default 0,
       resposta text,
       UNIQUE KEY id (id)
-    );
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
     CREATE TABLE ". WPGP_GOVR_CONTRIBC_TABLE. " (
       inverse_id int not null,
       children_id int not null,
       PRIMARY KEY (inverse_id,children_id),
       KEY contrib_children_inverse_fk (children_id)
-    );
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
     CREATE TABLE ". WPGP_GOVP_SESSION_TABLE . " (
       id int NOT NULL AUTO_INCREMENT,
       name varchar(1000) NOT NULL,
@@ -90,13 +90,13 @@ function wpgp_install() {
       pairwise_db_user varchar(1000),
       pairwise_db_pass varchar(1000),
       UNIQUE KEY id (id)
-    );
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
     CREATE TABLE " . WPGP_GOVP_THEME_TABLE . " (
       id int NOT NULL AUTO_INCREMENT,
       session_id int NOT NULL,
       name varchar(1000) NOT NULL,
       UNIQUE KEY id (id)
-    );
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
     CREATE TABLE " . WPGP_GOVP_CONTRIB_TABLE . " (
       id int NOT NULL AUTO_INCREMENT,
       title varchar(1000) NOT NULL,
@@ -111,13 +111,13 @@ function wpgp_install() {
       created_by_moderation int default 0,
       score float default 0,
       UNIQUE KEY id (id)
-    );
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
     CREATE TABLE ". WPGP_GOVP_CONTRIBC_TABLE. " (
       inverse_id int not null,
       children_id int not null,
       PRIMARY KEY (inverse_id,children_id),
       KEY contrib_children_inverse_fk (children_id)
-    );";
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
 
     error_log($sql);
     $wpdb->query ($sql);
