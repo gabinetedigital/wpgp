@@ -310,4 +310,34 @@ function wpgp_govr_contrib_insert_parts($org,$parts) {
     return true;
 }
 
+function wpgp_db_govr_contribs_scores($theme_id,
+                                      $page,
+                                      $perpage = WPGP_CONTRIBS_PER_PAGE) {
+  global $wpdb;
+  $offset = $page * $perpage;
+
+  $sql_base = $wpdb->prepare("
+      FROM
+          ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
+      WHERE
+          (contrib.theme_id=%d
+           AND contrib.user_id=user.ID
+           AND contrib.deleted=0)
+      ORDER BY score DESC", array($theme_id));
+
+  $sql = "SELECT contrib.*,
+          user.display_name as display_name" . $sql_base;
+
+  $sql = $wpdb->prepare($sql
+                        ." LIMIT %d, %d",array($offset,$perpage));
+  $listing = $wpdb->get_results($sql, ARRAY_A);
+
+  $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
+  $count = $wpdb->get_var($sql);
+
+  $sql = $wpdb->prepare("SELECT SUM(contrib.score) $sql_base");
+  $votes = $wpdb->get_var($sql);
+  return array($listing, $count, $votes);
+}
+
 ?>

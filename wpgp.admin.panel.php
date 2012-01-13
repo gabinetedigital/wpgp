@@ -55,9 +55,31 @@ function wpgp_show_gov_responde() {
         echo $renderer->render('admin/gov_responde_contribs.html', $ctx);
     }
 
+    function show_scores() {
+        $renderer = wpgp_renderer();
+        $page = (int) (isset($_GET["paged"]) ? $_GET["paged"] : '1');
+
+        $ctx = array();
+
+        $ctx['theme'] = wpgp_db_govr_get_theme($_GET['theme_id']);
+
+        list($ctx['listing'], $ctx['count'], $ctx['votes']) =
+            wpgp_db_govr_contribs_scores($_GET['theme_id'], $page-1);
+
+        $ctx['siteurl'] = get_bloginfo('siteurl');
+        $ctx['paged'] =  $page;
+        $ctx['numpages'] = ceil($ctx['count'] / WPGP_CONTRIBS_PER_PAGE);
+        $ctx['perpage'] = WPGP_CONTRIBS_PER_PAGE;
+        $ctx['pageurl'] = remove_query_arg("paged");
+        echo $renderer->render('admin/gov_responde_scores.html', $ctx);
+    }
+
     switch($_GET['subpage']) {
     case 'contributions':
         show_contributions();
+        break;
+    case 'scores':
+        show_scores();
         break;
     default:
         show_themes();

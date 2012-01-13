@@ -54,4 +54,10 @@ jQuery(function () {
     window.location.href = window.location.href
       + "&subpage=contributions&theme_id="+$(this).attr("name");
   });
+
+  $(".theme-scores").click(function(ev) {
+    ev.preventDefault();
+    window.location.href = window.location.href
+      + "&subpage=scores&theme_id="+$(this).attr("name");
+  });
 });

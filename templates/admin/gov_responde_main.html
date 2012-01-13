@@ -22,8 +22,9 @@
       <tr>
         <th style="width:1%"></th>
         <th style="width:8%">Name</th>
-        <th style="width:15%">Creation date</th>
+        <th style="width:10%">Creation date</th>
         <th style="width:10%">Number of contributions</th>
+        <th style="width:10%">Scores</th>
       </tr>
     </thead>
     <tbody id="contrib-rows">
@@ -36,6 +37,8 @@
                class="theme-name">{{theme.name}}</a></td>
         <td>{{theme.created_at|date("d/m/Y")}}</td>
         <td>{{theme.total_contributions}}</td>
+        <td><a href="" name="{{theme.id}}"
+               class="theme-scores">scores</a></td>
       </tr>
       {% endfor %}
     </tbody>
@@ -46,6 +49,7 @@
         <th classs="manage-column sortable desc" scope="col">Name</th>
         <th classs="manage-column sortable desc" scope="col">Creation date</th>
         <th classs="manage-column sortable desc" scope="col">Number of contributions<Theme/th>
+        <th classs="manage-column sortable desc" scope="col">Scores</th>
       </tr>
     </tfoot>
   </table>
