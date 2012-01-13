@@ -71,7 +71,7 @@ function import_themes() {
 function import_users() {
   $usermap = array();
   foreach(get_results(get_old_link(),"SELECT * FROM GD_INTERNAUTA") as $u) {
-    $sql = "INSERT INTO wp_usersa
+    $sql = "INSERT INTO wp_users
             (user_login,user_pass,user_nicename,user_email, user_status,
             display_name)
             VALUES
