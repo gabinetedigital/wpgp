@@ -19,11 +19,12 @@
          cellspacing="0">
     <thead>
       <tr>
-        <th style="width:1%"></th>
+        <th style="width:3%"></th>
         <th style="width:8%">Name</th>
         <th style="width:8%">Configure</th>
         <th style="width:15%">Creation date</th>
         <th style="width:10%">Number of contributions</th>
+        <th style="width:10%">Scores</th>
       </tr>
     </thead>
     <tbody id="contrib-rows">
@@ -38,6 +39,12 @@
                class="session-config">configure</a>
         <td>{{session.created_at|date("d/m/Y")}}</td>
         <td>{{session.total_contributions}}</td>
+        <td>
+            <a href="" name="{{session.id}}"
+               class="session-scores">total</a>
+            |
+            <a href="" name="{{session.id}}"
+               class="session-theme-scores">by theme</a>
       </tr>
       {% endfor %}
     </tbody>
@@ -49,6 +56,7 @@
         <th classs="manage-column sortable desc" scope="col">Configure</th>
         <th classs="manage-column sortable desc" scope="col">Creation date</th>
         <th classs="manage-column sortable desc" scope="col">Number of contributions<Theme/th>
+        <th classs="manage-column sortable desc" scope="col">Scores</th>
       </tr>
     </tfoot>
   </table>

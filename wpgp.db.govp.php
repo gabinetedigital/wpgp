@@ -339,4 +339,65 @@ function wpgp_govp_contrib_get_children($contrib) {
     return $wpdb->get_results($sql, ARRAY_A);
 }
 
+function wpgp_db_govp_contribs_scores($session_id,
+                                      $page,
+                                      $perpage = WPGP_CONTRIBS_PER_PAGE) {
+  global $wpdb;
+  $offset = $page * $perpage;
+
+  $sql_base = $wpdb->prepare("
+      FROM
+          ".WPGP_GOVP_CONTRIB_TABLE." contrib,
+          ".WPGP_GOVP_THEME_TABLE." theme,
+          wp_users user
+      WHERE
+          (theme.session_id=%d
+           AND contrib.theme_id=theme.id
+           AND contrib.user_id=user.ID
+           AND contrib.deleted=0)
+      ORDER BY score DESC", array($session_id));
+
+  $sql = "SELECT contrib.*,
+          theme.name as theme_name,
+          user.display_name as display_name" . $sql_base;
+
+  $sql = $wpdb->prepare($sql
+                        ." LIMIT %d, %d",array($offset,$perpage));
+  $listing = $wpdb->get_results($sql, ARRAY_A);
+  $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
+  $count = $wpdb->get_var($sql);
+
+  return array($listing, $count);
+}
+
+function
+wpgp_db_govp_contribs_theme_scores($theme_id,
+                                   $page,
+                                   $perpage = WPGP_CONTRIBS_PER_PAGE) {
+  global $wpdb;
+  $offset = $page * $perpage;
+
+  $sql_base = $wpdb->prepare("
+      FROM
+          ".WPGP_GOVP_CONTRIB_TABLE." contrib,
+          ".WPGP_GOVP_THEME_TABLE." theme,
+          wp_users user
+      WHERE
+          (theme.id=%d
+           AND contrib.theme_id=theme.id
+           AND contrib.user_id=user.ID
+           AND contrib.deleted=0)
+      ORDER BY score DESC", array($theme_id));
+
+  $sql = "SELECT contrib.*,
+          theme.name as theme_name,
+          user.display_name as display_name" . $sql_base;
+
+  $sql = $wpdb->prepare($sql
+                        ." LIMIT %d, %d",array($offset,$perpage));
+  $listing = $wpdb->get_results($sql, ARRAY_A);
+  $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
+  $count = $wpdb->get_var($sql);
+
+  return array($listing, $count);}
 ?>

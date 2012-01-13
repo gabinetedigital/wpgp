@@ -1,0 +1,30 @@
+<div class="wrap">
+  <h2>
+    {{session.name}} scores
+  </h2>
+  <table class="wp-list-table widefat audiences fixed"
+         cellspacing="0">
+    <thead>
+      <tr>
+        <th style="width:8%">Name</th>
+        <th style="width:10%">Number of contributions</th>
+      </tr>
+    </thead>
+    <tbody id="contrib-rows">
+      {% for theme in listing %}
+      <tr>
+        <td><a href="" name="{{theme.id}}"
+               class="theme-name">{{theme.name}}</a></td>
+        <td>{{theme.total_contributions}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <th classs="manage-column sortable desc" scope="col">Name</th>
+        <th classs="manage-column sortable desc" scope="col">Number of contributions</th>
+      </tr>
+    </tfoot>
+  </table>
+</div>

@@ -1,5 +1,4 @@
 function slow_operation(fn) { fn(new Function) }
-
 jQuery(function () {
   var $ = jQuery;
 
@@ -61,6 +60,18 @@ jQuery(function () {
     ev.preventDefault();
     window.location.href = window.location.href
       + "&subpage=session_config&session_id="+$(this).attr("name");
+  });
+
+  $(".session-scores").click(function(ev) {
+    ev.preventDefault();
+    window.location.href = window.location.href
+      + "&subpage=total_scores&session_id="+$(this).attr("name");
+  });
+
+  $(".session-theme-scores").click(function(ev) {
+    ev.preventDefault();
+    window.location.href = window.location.href
+      + "&subpage=theme_list_score&session_id="+$(this).attr("name");
   });
 
 

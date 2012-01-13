@@ -135,12 +135,72 @@ function wpgp_show_gov_pergunta() {
         echo $renderer->render('admin/gov_pergunta_contribs.html', $ctx);
     }
 
+    function show_total_scores() {
+        $renderer = wpgp_renderer();
+        $page = (int) (isset($_GET["paged"]) ? $_GET["paged"] : '1');
+
+        $ctx = array();
+
+        $ctx['session'] = wpgp_db_govp_get_session($_GET['session_id']);
+
+        list($ctx['listing'], $ctx['count']) =
+            wpgp_db_govp_contribs_scores($_GET['session_id'], $page-1);
+
+        $ctx['siteurl'] = get_bloginfo('siteurl');
+        $ctx['paged'] =  $page;
+        $ctx['numpages'] = ceil($ctx['count'] / WPGP_CONTRIBS_PER_PAGE);
+        $ctx['perpage'] = WPGP_CONTRIBS_PER_PAGE;
+        $ctx['pageurl'] = remove_query_arg("paged");
+        echo $renderer->render('admin/gov_pergunta_scores.html', $ctx);
+    }
+
+    function show_theme_list_score() {
+        $renderer = wpgp_renderer();
+        $ctx = array();
+        $ctx['listing'] = wpgp_db_govp_get_themes($_GET['session_id']);
+        echo $renderer->render('admin/gov_pergunta_theme_list_score.html',
+                               $ctx);
+    }
+
+    function show_contrib_scores() {
+        $renderer = wpgp_renderer();
+        $page = (int) (isset($_GET["paged"]) ? $_GET["paged"] : '1');
+
+        $ctx = array();
+
+        $ctx['theme'] = wpgp_db_govp_get_session($_GET['theme_id']);
+
+        $ctx['session'] =
+            wpgp_db_govp_get_session($ctx['theme']['session_id']);
+
+        list($ctx['listing'], $ctx['count']) =
+            wpgp_db_govp_contribs_theme_scores($_GET['theme_id'],
+                                               $page-1);
+
+        $ctx['siteurl'] = get_bloginfo('siteurl');
+        $ctx['paged'] =  $page;
+        $ctx['numpages'] = ceil($ctx['count'] / WPGP_CONTRIBS_PER_PAGE);
+        $ctx['perpage'] = WPGP_CONTRIBS_PER_PAGE;
+        $ctx['pageurl'] = remove_query_arg("paged");
+        echo $renderer->render('admin/gov_pergunta_theme_scores.html',
+                               $ctx);
+    }
+
     switch($_GET['subpage']) {
     case 'contributions':
         show_contributions();
         break;
     case 'session_config':
         show_session_configuration();
+        break;
+    case 'total_scores':
+        show_total_scores();
+        break;
+    case 'theme_list_score':
+        show_theme_list_score();
+        break;
+    case 'theme_contrib_score':
+        show_contrib_scores();
         break;
     default:
         show_sessions();
