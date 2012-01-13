@@ -340,4 +340,20 @@ function wpgp_db_govr_contribs_scores($theme_id,
   return array($listing, $count, $votes);
 }
 
+
+function wpgp_db_govr_contrib_count_grouped_by_date($theme_id) {
+    global $wpdb;
+    $sql = $wpdb->prepare(
+      "SELECT
+        year(c.created_at) AS year,
+        month(c.created_at) AS month,
+        day(c.created_at) AS day,
+        date(c.created_at) AS date,
+        count(c.id) AS count
+      FROM ".WPGP_GOVR_CONTRIB_TABLE." AS c
+      WHERE c.theme_id=%d
+      GROUP BY DATE(c.created_at);", array($theme_id));
+    return $wpdb->get_results($sql, ARRAY_A);
+}
+
 ?>

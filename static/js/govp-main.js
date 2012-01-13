@@ -74,6 +74,12 @@ jQuery(function () {
       + "&subpage=theme_list_score&session_id="+$(this).attr("name");
   });
 
+  $(".session-stats").click(function(ev) {
+    ev.preventDefault();
+    window.location.href = window.location.href
+      + "&subpage=stats&session_id="+$(this).attr("name");
+  });
+
 
   $(".wp-list-table").show();
   $(".wp-list-table-loading").hide();

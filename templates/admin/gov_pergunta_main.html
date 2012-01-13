@@ -25,6 +25,7 @@
         <th style="width:15%">Creation date</th>
         <th style="width:10%">Number of contributions</th>
         <th style="width:10%">Scores</th>
+        <th style="width:10%">Stats</th>
       </tr>
     </thead>
     <tbody id="contrib-rows">
@@ -45,6 +46,10 @@
             |
             <a href="" name="{{session.id}}"
                class="session-theme-scores">by theme</a>
+        <td>
+          <a href="" name="{{session.id}}"
+             class="session-stats">stats</a>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
@@ -57,6 +62,7 @@
         <th classs="manage-column sortable desc" scope="col">Creation date</th>
         <th classs="manage-column sortable desc" scope="col">Number of contributions<Theme/th>
         <th classs="manage-column sortable desc" scope="col">Scores</th>
+        <th classs="manage-column sortable desc" scope="col">Stats</th>
       </tr>
     </tfoot>
   </table>

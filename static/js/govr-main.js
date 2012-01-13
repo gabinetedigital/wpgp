@@ -60,4 +60,10 @@ jQuery(function () {
     window.location.href = window.location.href
       + "&subpage=scores&theme_id="+$(this).attr("name");
   });
+
+  $(".theme-stats").click(function(ev) {
+    ev.preventDefault();
+    window.location.href = window.location.href
+      + "&subpage=stats&theme_id="+$(this).attr("name");
+  });
 });

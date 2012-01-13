@@ -399,5 +399,53 @@ wpgp_db_govp_contribs_theme_scores($theme_id,
   $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
   $count = $wpdb->get_var($sql);
 
-  return array($listing, $count);}
+  return array($listing, $count);
+}
+
+function wpgp_db_govp_contrib_count_grouped_by_date($session_id) {
+    global $wpdb;
+    $sql = $wpdb->prepare(
+    "SELECT
+      year(c.created_at) AS year,
+      month(c.created_at) AS month,
+      day(c.created_at) AS day,
+      date(c.created_at) AS date,
+      count(c.id) AS count
+    FROM ".WPGP_GOVP_CONTRIB_TABLE." AS c,
+         ".WPGP_GOVP_THEME_TABLE." AS t
+    WHERE t.session_id=%d
+          AND c.theme_id=t.id
+    GROUP BY DATE(c.created_at);", array($session_id));
+    return $wpdb->get_results($sql, ARRAY_A);
+}
+
+
+function wpgp_db_govp_contrib_count_grouped_by_theme($session_id) {
+    global $wpdb;
+    $sql = $wpdb->prepare("SELECT
+      t.name, count(c.id) AS count
+    FROM ".WPGP_GOVP_CONTRIB_TABLE." AS c,
+         ".WPGP_GOVP_THEME_TABLE." AS t
+    WHERE t.session_id=%d
+          AND c.theme_id=t.id
+    GROUP BY t.id;", array($session_id));
+    return $wpdb->get_results($sql, ARRAY_A);
+}
+
+function wpgp_db_govp_contrib_count_grouped_by_themedate($session_id) {
+    global $wpdb;
+    $sql = $wpdb->prepare(
+    "SELECT
+      c.theme,
+      date(c.creation_date) AS date,
+      count(c.id) AS count,
+      year(c.creation_date) AS year,
+      month(c.creation_date) AS month,
+      day(c.creation_date) AS day,
+      date(c.creation_date) AS date
+    FROM contrib AS c GROUP BY c.theme, date(c.creation_date);",
+    array($session_id));
+    return $wpdb->get_results($sql, ARRAY_A);
+}
+
 ?>

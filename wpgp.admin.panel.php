@@ -74,12 +74,28 @@ function wpgp_show_gov_responde() {
         echo $renderer->render('admin/gov_responde_scores.html', $ctx);
     }
 
+    function show_stats() {
+        $renderer = wpgp_renderer();
+        $ctx = array();
+
+        $theme_id = $_GET['theme_id'];
+        $ctx['theme'] = wpgp_db_govr_get_theme($theme_id);
+
+        $st = wpgp_db_govr_contrib_count_grouped_by_date($theme_id);
+        $ctx['chart_byday'] = json_encode($st);
+
+        echo $renderer->render('admin/gov_responde_stats.html', $ctx);
+    }
+
     switch($_GET['subpage']) {
     case 'contributions':
         show_contributions();
         break;
     case 'scores':
         show_scores();
+        break;
+    case 'stats':
+        show_stats();
         break;
     default:
         show_themes();
@@ -186,6 +202,27 @@ function wpgp_show_gov_pergunta() {
                                $ctx);
     }
 
+    function show_stats() {
+        $renderer = wpgp_renderer();
+        $ctx = array();
+
+        $sid = $_GET['session_id'];
+        $ctx['session'] = wpgp_db_govp_get_session($sid);
+
+        $ctx['chart_byday'] =
+            json_encode(wpgp_db_govp_contrib_count_grouped_by_date($sid));
+
+        $ctx['chart_bytheme'] =
+            json_encode(wpgp_db_govp_contrib_count_grouped_by_theme($sid));
+
+        $ctx['chart_bythemedate'] =
+            json_encode(wpgp_db_govp_contrib_count_grouped_by_themedate($sid));
+        /* $ctx['chart_votebyday'] = */
+        /*     json_encode(wpgd_db_get_vote_count_grouped_by_date($sid)); */
+
+        echo $renderer->render('admin/gov_pergunta_stats.html', $ctx);
+    }
+
     switch($_GET['subpage']) {
     case 'contributions':
         show_contributions();
@@ -201,6 +238,9 @@ function wpgp_show_gov_pergunta() {
         break;
     case 'theme_contrib_score':
         show_contrib_scores();
+        break;
+    case 'stats':
+        show_stats();
         break;
     default:
         show_sessions();
@@ -228,6 +268,14 @@ function wpgp_admin_menu() {
             wp_enqueue_script('jquery-param',
                               plugins_url("static/js/util.js",
                                               __FILE__));
+
+            wp_enqueue_script(
+                'flot',
+                plugins_url('static/js/jquery.flot.min.js', __FILE__));
+
+            wp_enqueue_script(
+                'flot-pie',
+                plugins_url('static/js/jquery.flot.pie.js', __FILE__));
 
             $sufix = $_GET['subpage'] ? '-'.$_GET['subpage'] : '-main';
             switch ($hooksufix) {

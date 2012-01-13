@@ -20,11 +20,12 @@
          cellspacing="0">
     <thead>
       <tr>
-        <th style="width:1%"></th>
+        <th style="width:5%"></th>
         <th style="width:8%">Name</th>
         <th style="width:10%">Creation date</th>
         <th style="width:10%">Number of contributions</th>
         <th style="width:10%">Scores</th>
+        <th style="width:10%">Stats</th>
       </tr>
     </thead>
     <tbody id="contrib-rows">
@@ -39,6 +40,8 @@
         <td>{{theme.total_contributions}}</td>
         <td><a href="" name="{{theme.id}}"
                class="theme-scores">scores</a></td>
+        <td><a href="" name="{{theme.id}}"
+               class="theme-stats">stats</a></td>
       </tr>
       {% endfor %}
     </tbody>
@@ -50,6 +53,7 @@
         <th classs="manage-column sortable desc" scope="col">Creation date</th>
         <th classs="manage-column sortable desc" scope="col">Number of contributions<Theme/th>
         <th classs="manage-column sortable desc" scope="col">Scores</th>
+        <th classs="manage-column sortable desc" scope="col">Stats</th>
       </tr>
     </tfoot>
   </table>
