@@ -368,4 +368,22 @@ function wpgp_db_govr_contrib_count_grouped_by_date($theme_id) {
     return $wpdb->get_results($sql, ARRAY_A);
 }
 
+function wpgp_db_govr_get_summary($from, $to) {
+
+  $fromto = '';
+  if($from && $to) {
+      $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$from);
+      $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$to);
+      $fromto = " AND (DATE(created_at) > DATE($from)
+                 AND DATE(created_at) < DATE($to)) ";
+  }
+
+  global $wpdb;
+  $sql = "SELECT
+             COUNT(*) as total_contribs,
+             SUM(score) as total_votes
+            FROM wpgp_govr_contribs
+            WHERE 1=1 $fromto";
+  return $wpdb->get_row($sql, ARRAY_A);
+}
 ?>

@@ -5,6 +5,35 @@
        class="add-new-h2">Add New</a>
   </h2>
 
+  <div class="wpgp-new-theme stuffbox">
+    <h3>Stats</h3>
+    <span>Total contributions: {{total_contribs}}</span>
+    <span>Total votes: {{total_votes}}</span>
+
+    <form id="fromto" action="{{ pageurl }}"
+          onsubmit="window.location.href+='&from='+document.forms.fromto.from.value+'&to='+document.forms.fromto.to.value; return false">
+        <label class="screen-reader-text" for="from">
+          From:
+        </label>
+        <input type="text" id="from" name="from">
+        <label class="screen-reader-text" for="to">
+          To:
+        </label>
+        <input type="text" id="to" name="to">
+        <input
+           type="submit" name="" id="search-submit" class="button"
+           value="Filter date">
+        <input type="reset" class="button" value="Clear">
+      <script>
+        jQuery("#from").datepicker({ dateFormat: 'dd/mm/yy' });
+        jQuery("#to").datepicker({ dateFormat: 'dd/mm/yy' });
+        document.forms.fromto.from.value = '{{ from }}';
+        document.forms.fromto.to.value = '{{ to }}';
+      </script>
+    </form>
+  </div>
+
+
   <div class="wpgp-new-theme stuffbox" style="display:none">
     <form class="form-wrap">
       <div class="form-field">

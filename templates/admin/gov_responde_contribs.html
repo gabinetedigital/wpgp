@@ -28,19 +28,22 @@
       <label class="screen-reader-text" for="from">
         From:
       </label>
-      <input type="text" id="from" name="from" value="{{ from }}">
+      <input type="text" id="from" name="from">
       <label class="screen-reader-text" for="to">
         To:
       </label>
-      <input type="text" id="to" name="to" value="{{ to }}">
+      <input type="text" id="to" name="to">
       <input
          type="submit" name="" id="search-submit" class="button"
          value="Filter date">
+        <input type="reset" class="button" value="Clear">
     </p>
 
     <script>
       jQuery("#from").datepicker({ dateFormat: 'dd/mm/yy' });
       jQuery("#to").datepicker({ dateFormat: 'dd/mm/yy' });
+      document.forms.fromto.from.value = '{{ from }}';
+      document.forms.fromto.to.value = '{{ to }}';
     </script>
   </form>
 

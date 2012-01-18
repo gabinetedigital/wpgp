@@ -21,6 +21,15 @@ function wpgp_show_gov_responde() {
         $renderer = wpgp_renderer();
         $ctx = array();
         $ctx['listing'] = wpgp_db_govr_get_themes();
+
+        $summary = wpgp_db_govr_get_summary($_GET['from'], $_GET['to']);
+
+        $ctx['from'] = $_GET['from'];
+        $ctx['to'] = $_GET['to'];
+
+        $ctx['total_contribs'] = $summary['total_contribs'];
+        $ctx['total_votes'] = $summary['total_votes'];
+
         echo $renderer->render('admin/gov_responde_main.html', $ctx);
     }
 
