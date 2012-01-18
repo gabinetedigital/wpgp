@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include 'Twig/Autoloader.php';
+require_once 'Twig/Autoloader.php';
 Twig_Autoloader::register();
 
 /**
  * Call a PHP function from a twig template
  */
-class Twig_Extension_exec extends Twig_Extension
+class Wpgp_Twig_Extension_exec extends Twig_Extension
 {
      public function __construct() {
      }
@@ -52,7 +52,7 @@ class Twig_Extension_exec extends Twig_Extension
 /**
  * A template renderer engine based on the `twig' library.
  */
-class WpGdTemplatingRenderer {
+class WpGpTemplatingRenderer {
     private $twig = null;
 
     function __construct() {
@@ -60,7 +60,7 @@ class WpGdTemplatingRenderer {
         $loader = new Twig_Loader_Filesystem($path);
         $this->twig =
             new Twig_Environment($loader);
-        $this->twig->addExtension(new Twig_Extension_exec);
+        $this->twig->addExtension(new Wpgp_Twig_Extension_exec);
     }
 
     public function render($templateName, $context=array()) {
@@ -72,7 +72,7 @@ class WpGdTemplatingRenderer {
 
 function wpgp_renderer() {
     static $renderer = null;
-    if(!$renderer) $renderer = new WpGdTemplatingRenderer();
+    if(!$renderer) $renderer = new WpGpTemplatingRenderer();
     return $renderer;
 }
 
