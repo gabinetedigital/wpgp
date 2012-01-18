@@ -6,6 +6,8 @@
     <a href="" class="add-new-h2">Add New</a>
   </h2>
 
+  Resultado: {{count}} contribuições, {{scores}} votos.
+
   <form
      id="search" method="get" action="{{ pageurl }}"
      onsubmit="window.location.href+='&s='+document.forms.search.s.value; return false">
@@ -35,6 +37,11 @@
          type="submit" name="" id="search-submit" class="button"
          value="Filter date">
     </p>
+
+    <script>
+      jQuery("#from").datepicker({ dateFormat: 'dd/mm/yy' });
+      jQuery("#to").datepicker({ dateFormat: 'dd/mm/yy' });
+    </script>
   </form>
 
   <div class="tablenav top">
@@ -100,6 +107,8 @@
         <th style="width:10%"><a href="{{pageurl}}&sort=author">Author</a></th>
         <th class="column-date" style="width:8%">
           <a href="{{pageurl}}&sort=date">Creation date</a></th>
+        <th class="column-date" style="width:8%">
+          <a href="{{pageurl}}&sort=score">Score</a></th>
       </tr>
     </thead>
     <tbody id="contrib-rows">
@@ -118,6 +127,7 @@
         <th classs="manage-column sortable asc" scope="col">Content</th>
         <th classs="manage-column sortable desc" scope="col">Author</th>
         <th classs="manage-column sortable desc" scope="col">Creation Date</th>
+        <th classs="manage-column sortable desc" scope="col">Score</th>
       </tr>
     </tfoot>
   </table>

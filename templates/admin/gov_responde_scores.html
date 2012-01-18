@@ -1,5 +1,29 @@
 <div class="wrap">
-  <h2>Scores</h2> {{theme.name}}: {{votes}} votes 
+  <h2>Scores: {{theme.name}}</h2>
+
+  Resultado: {{count}} contribuições, {{votes}} votos.
+
+  <form id="fromto" action="{{ pageurl }}"
+     onsubmit="window.location.href+='&from='+document.forms.fromto.from.value+'&to='+document.forms.fromto.to.value; return false">
+    <p class="search-box">
+      <label class="screen-reader-text" for="from">
+        From:
+      </label>
+      <input type="text" id="from" name="from" value="{{ from }}">
+      <label class="screen-reader-text" for="to">
+        To:
+      </label>
+      <input type="text" id="to" name="to" value="{{ to }}">
+      <input
+         type="submit" name="" id="search-submit" class="button"
+         value="Filter date">
+    </p>
+
+    <script>
+      jQuery("#from").datepicker({ dateFormat: 'dd/mm/yy' });
+      jQuery("#to").datepicker({ dateFormat: 'dd/mm/yy' });
+    </script>
+  </form>
 
   <table class="wp-list-table widefat audiences fixed"
          cellspacing="0">
@@ -21,7 +45,7 @@
         <td>{{contrib.title}}</td>
         <td>{{contrib.content}}</td>
         <td>{{contrib.display_name}}</td>
-        <td>{{contrib.creation_date|date("d/m/Y")}}</td>
+        <td>{{contrib.created_at|date("d/m/Y")}}</td>
         <td>{{contrib.score}}</td>
       </tr>
       {% endfor %}

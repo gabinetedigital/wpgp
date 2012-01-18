@@ -38,6 +38,12 @@ function wpgp_show_gov_responde() {
                                               , $_GET['status']
                                               );
 
+
+        $ctx['scores'] = 0;
+        foreach($ctx['listing'] as $x) {
+            $ctx['scores'] += $x['score'];
+        }
+
         $ctx['theme'] = wpgp_db_govr_get_theme($_GET['theme_id']);
         $ctx['themes'] = wpgp_db_govr_get_themes();
         $ctx['s'] = $_GET['s'];
@@ -64,7 +70,8 @@ function wpgp_show_gov_responde() {
         $ctx['theme'] = wpgp_db_govr_get_theme($_GET['theme_id']);
 
         list($ctx['listing'], $ctx['count'], $ctx['votes']) =
-            wpgp_db_govr_contribs_scores($_GET['theme_id'], $page-1);
+            wpgp_db_govr_contribs_scores($_GET['theme_id'], $page-1,
+                                         $_GET['from'], $_GET['to']);
 
         $ctx['siteurl'] = get_bloginfo('siteurl');
         $ctx['paged'] =  $page;
@@ -265,9 +272,22 @@ function wpgp_admin_menu() {
 
     /* Loading javascript */
     add_action('admin_enqueue_scripts', function($hooksufix) use ($govp,$govr){
-            wp_enqueue_script('jquery-param',
-                              plugins_url("static/js/util.js",
-                                              __FILE__));
+
+            wp_enqueue_script(
+                'jquery',
+                plugins_url('static/js/jquery-1.7.1.min.js', __FILE__));
+
+            wp_enqueue_script(
+                'jquery-ui',
+                plugins_url('static/js/jquery-ui-1.8.17.custom.min.js', __FILE__));
+
+            wp_enqueue_script(
+                'wpgp-util',
+                plugins_url('static/js/util.js', __FILE__));
+
+                wp_enqueue_style(
+                                 'jquery-ui',
+                                 plugins_url('static/css/jquery.ui.all.css', __FILE__));
 
             wp_enqueue_script(
                 'flot',

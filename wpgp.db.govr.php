@@ -76,7 +76,8 @@ function wpgp_db_govr_get_theme_contribs($theme_id,
                       'status' => 'contrib.status',
                       'date'  => 'contrib.created_at',
                       'author' => 'user.display_name',
-                      'title' => 'contrib.title'
+                      'title' => 'contrib.title',
+                      'score' => 'contrib.score'
                       );
   if (isset($sortfields[$sortby])) {
       $sortfield = $sortfields[$sortby];
@@ -312,9 +313,19 @@ function wpgp_govr_contrib_insert_parts($org,$parts) {
 
 function wpgp_db_govr_contribs_scores($theme_id,
                                       $page,
+                                      $from,
+                                      $to,
                                       $perpage = WPGP_CONTRIBS_PER_PAGE) {
   global $wpdb;
   $offset = $page * $perpage;
+
+  $fromto = '';
+  if($from && $to) {
+      $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$from);
+      $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$to);
+      $fromto = " AND (DATE(contrib.created_at) > DATE($from)
+                 AND DATE(contrib.created_at) < DATE($to)) ";
+  }
 
   $sql_base = $wpdb->prepare("
       FROM
@@ -322,7 +333,8 @@ function wpgp_db_govr_contribs_scores($theme_id,
       WHERE
           (contrib.theme_id=%d
            AND contrib.user_id=user.ID
-           AND contrib.deleted=0)
+           AND contrib.deleted=0
+           $fromto)
       ORDER BY score DESC", array($theme_id));
 
   $sql = "SELECT contrib.*,
