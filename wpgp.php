@@ -41,6 +41,7 @@ include_once('wpgp.db.govp.php');
 include_once('wpgp.admin.panel.php');
 include_once('wpgp.ajax.govr.php');
 include_once('wpgp.ajax.govp.php');
+include_once('wpgp.xmlrpc.php');
 
 function wpgp_install() {
     add_role( 'wpgp_moderator', 'Moderador',
