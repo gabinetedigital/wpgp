@@ -1,7 +1,7 @@
 <?php /* -*- Mode: php; c-basic-offset:4; -*- */
 /* Copyright (C) 2011  Lincoln de Sousa <lincoln@comum.org>
 /* Copyright (C) 2011  Thiago Silva <thiago@metareload.com>
- * Copyright (C) 2011  Governo do Estado do Rio Grande do Sul
+ * Copyright (C) 2011, 2012  Governo do Estado do Rio Grande do Sul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,8 +23,7 @@ Twig_Autoloader::register();
 /**
  * Call a PHP function from a twig template
  */
-class Wpgp_Twig_Extension_exec extends Twig_Extension
-{
+class Wpgp_Twig_Extension_exec extends Twig_Extension {
      public function __construct() {
      }
 
@@ -72,7 +71,8 @@ class WpGpTemplatingRenderer {
 
 function wpgp_renderer() {
     static $renderer = null;
-    if(!$renderer) $renderer = new WpGpTemplatingRenderer();
+    if (!$renderer)
+        $renderer = new WpGpTemplatingRenderer();
     return $renderer;
 }
 

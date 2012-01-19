@@ -109,44 +109,44 @@ function wpgp_db_govp_get_session_contribs($session_id,
                                            $s = null,
                                            $filter = null,
                                            $perpage = WPGP_CONTRIBS_PER_PAGE) {
-  global $wpdb;
-  $offset = $page * $perpage;
-  $sortfields = array(
-                      'id' => 'contrib.id' ,
-                      'status' => 'contrib.status',
-                      'theme' => 'contrib.theme_id',
-                      'date'  => 'contrib.created_at',
-                      'author' => 'user.display_name',
-                      'title' => 'contrib.title'
-                      );
+    global $wpdb;
+    $offset = $page * $perpage;
+    $sortfields = array(
+                        'id' => 'contrib.id' ,
+                        'status' => 'contrib.status',
+                        'theme' => 'contrib.theme_id',
+                        'date'  => 'contrib.created_at',
+                        'author' => 'user.display_name',
+                        'title' => 'contrib.title'
+                        );
 
-  if (isset($sortfields[$sortby])) {
-      $sortfield = $sortfields[$sortby];
-  } else {
-      $sortfield = 'contrib.id';
-  }
+    if (isset($sortfields[$sortby])) {
+        $sortfield = $sortfields[$sortby];
+    } else {
+        $sortfield = 'contrib.id';
+    }
 
-  $themefilter = '';
-  if ($theme_id) {
-      $themefilter = " AND contrib.theme_id = $theme_id ";
-  }
+    $themefilter = '';
+    if ($theme_id) {
+        $themefilter = " AND contrib.theme_id = $theme_id ";
+    }
 
-  $statusfilter = '';
-  if ($status == 1) { //approved
-      $statusfilter = " AND contrib.status='approved' ";
-  } else if ($status == -1) { //pending
-      $statusfilter = " AND contrib.status <> 'approved' ";
-  }
+    $statusfilter = '';
+    if ($status == 1) { //approved
+        $statusfilter = " AND contrib.status='approved' ";
+    } else if ($status == -1) { //pending
+        $statusfilter = " AND contrib.status <> 'approved' ";
+    }
 
-  $fromto = '';
-  if($from && $to) {
-      $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$from);
-      $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$to);
-      $fromto = " AND (DATE(contrib.created_at) > DATE($from)
+    $fromto = '';
+    if($from && $to) {
+        $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$from);
+        $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$to);
+        $fromto = " AND (DATE(contrib.created_at) > DATE($from)
                  AND DATE(contrib.created_at) < DATE($to)) ";
-  }
+    }
 
-  $sql_base = $wpdb->prepare("
+    $sql_base = $wpdb->prepare("
       FROM
           ".WPGP_GOVP_CONTRIB_TABLE." contrib,
           ".WPGP_GOVP_THEME_TABLE." theme,
@@ -162,16 +162,16 @@ function wpgp_db_govp_get_session_contribs($session_id,
       ORDER BY $sortfield
     ", array($session_id));
 
-  $sql = "SELECT contrib.*,
+    $sql = "SELECT contrib.*,
           theme.name as theme_name,
           user.display_name as display_name  $sql_base ";
-  $sql = $wpdb->prepare($sql
-                        ." LIMIT %d, %d",array($offset,$perpage));
-  $listing = $wpdb->get_results($sql, ARRAY_A);
+    $sql = $wpdb->prepare($sql
+                          ." LIMIT %d, %d",array($offset,$perpage));
+    $listing = $wpdb->get_results($sql, ARRAY_A);
 
-  $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
-  $count = $wpdb->get_var($sql);
-  return array($listing, $count);
+    $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
+    $count = $wpdb->get_var($sql);
+    return array($listing, $count);
 }
 
 function wpgp_db_govp_get_contrib($id) {
@@ -342,10 +342,10 @@ function wpgp_govp_contrib_get_children($contrib) {
 function wpgp_db_govp_contribs_scores($session_id,
                                       $page,
                                       $perpage = WPGP_CONTRIBS_PER_PAGE) {
-  global $wpdb;
-  $offset = $page * $perpage;
+    global $wpdb;
+    $offset = $page * $perpage;
 
-  $sql_base = $wpdb->prepare("
+    $sql_base = $wpdb->prepare("
       FROM
           ".WPGP_GOVP_CONTRIB_TABLE." contrib,
           ".WPGP_GOVP_THEME_TABLE." theme,
@@ -357,23 +357,22 @@ function wpgp_db_govp_contribs_scores($session_id,
            AND contrib.deleted=0)
       ORDER BY score DESC", array($session_id));
 
-  $sql = "SELECT contrib.*,
+    $sql = "SELECT contrib.*,
           theme.name as theme_name,
           user.display_name as display_name" . $sql_base;
 
-  $sql = $wpdb->prepare($sql
-                        ." LIMIT %d, %d",array($offset,$perpage));
-  $listing = $wpdb->get_results($sql, ARRAY_A);
-  $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
-  $count = $wpdb->get_var($sql);
+    $sql = $wpdb->prepare($sql
+                          ." LIMIT %d, %d",array($offset,$perpage));
+    $listing = $wpdb->get_results($sql, ARRAY_A);
+    $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
+    $count = $wpdb->get_var($sql);
 
-  return array($listing, $count);
+    return array($listing, $count);
 }
 
-function
-wpgp_db_govp_contribs_theme_scores($theme_id,
-                                   $page,
-                                   $perpage = WPGP_CONTRIBS_PER_PAGE) {
+function wpgp_db_govp_contribs_theme_scores($theme_id,
+                                            $page,
+                                            $perpage = WPGP_CONTRIBS_PER_PAGE) {
   global $wpdb;
   $offset = $page * $perpage;
 

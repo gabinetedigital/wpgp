@@ -31,8 +31,8 @@ function wpgp_db_govr_get_themes() {
     $sql = "SELECT * FROM ".WPGP_GOVR_THEME_TABLE;
     $themes = $wpdb->get_results($sql, ARRAY_A);
     foreach ($themes as &$t) {
-      $t['total_contributions'] =
-        $wpdb->get_var("SELECT COUNT(*) FROM ".WPGP_GOVR_CONTRIB_TABLE."
+        $t['total_contributions'] =
+            $wpdb->get_var("SELECT COUNT(*) FROM ".WPGP_GOVR_CONTRIB_TABLE."
                         WHERE deleted=0 AND theme_id={$t[id]}");
     }
     return $themes;
@@ -45,10 +45,10 @@ function wpgp_db_govr_delete_theme($id) {
 
     $count = $wpdb->get_var($sql);
     if ($count == 0) {
-      $sql = $wpdb->prepare("DELETE FROM ".WPGP_GOVR_THEME_TABLE."
+        $sql = $wpdb->prepare("DELETE FROM ".WPGP_GOVR_THEME_TABLE."
                              WHERE ID=%d", array($id));
-      $wpdb->query($sql);
-      return true;
+        $wpdb->query($sql);
+        return true;
     }
     return false;
 }
@@ -61,46 +61,46 @@ function wpgp_db_govr_get_theme($id) {
 }
 
 function wpgp_db_govr_get_theme_contribs($theme_id,
-                                    $page = '0',
-                                    $sortby = 'contrib.id',
-                                    $from = null,
-                                    $to = null,
-                                    $status = 0,
-                                    $s = null,
-                                    $filter = null,
-                                    $perpage = WPGP_CONTRIBS_PER_PAGE) {
-  global $wpdb;
-  $offset = $page * $perpage;
-  $sortfields = array(
-                      'id' => 'contrib.id' ,
-                      'status' => 'contrib.status',
-                      'date'  => 'contrib.created_at',
-                      'author' => 'user.display_name',
-                      'title' => 'contrib.title',
-                      'score' => 'contrib.score'
-                      );
-  if (isset($sortfields[$sortby])) {
-      $sortfield = $sortfields[$sortby];
-  } else {
-      $sortfield = 'contrib.id';
-  }
+                                         $page = '0',
+                                         $sortby = 'contrib.id',
+                                         $from = null,
+                                         $to = null,
+                                         $status = 0,
+                                         $s = null,
+                                         $filter = null,
+                                         $perpage = WPGP_CONTRIBS_PER_PAGE) {
+    global $wpdb;
+    $offset = $page * $perpage;
+    $sortfields = array(
+                        'id' => 'contrib.id' ,
+                        'status' => 'contrib.status',
+                        'date'  => 'contrib.created_at',
+                        'author' => 'user.display_name',
+                        'title' => 'contrib.title',
+                        'score' => 'contrib.score'
+                        );
+    if (isset($sortfields[$sortby])) {
+        $sortfield = $sortfields[$sortby];
+    } else {
+        $sortfield = 'contrib.id';
+    }
 
-  $statusfilter = '';
-  if ($status == 1) { //approved
-      $statusfilter = " AND contrib.status = 'approved' ";
-  } else if ($status == -1) { //everyone else
-      $statusfilter = " AND contrib.status <> 'approved' ";
-  }
+    $statusfilter = '';
+    if ($status == 1) { //approved
+        $statusfilter = " AND contrib.status = 'approved' ";
+    } else if ($status == -1) { //everyone else
+        $statusfilter = " AND contrib.status <> 'approved' ";
+    }
 
-  $fromto = '';
-  if($from && $to) {
-      $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$from);
-      $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$to);
-      $fromto = " AND (DATE(contrib.created_at) > DATE($from)
+    $fromto = '';
+    if($from && $to) {
+        $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$from);
+        $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$to);
+        $fromto = " AND (DATE(contrib.created_at) > DATE($from)
                  AND DATE(contrib.created_at) < DATE($to)) ";
-  }
+    }
 
-  $sql_base = $wpdb->prepare("
+    $sql_base = $wpdb->prepare("
       FROM
           ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
       WHERE
@@ -112,15 +112,15 @@ function wpgp_db_govr_get_theme_contribs($theme_id,
       ORDER BY $sortfield
     ", array($theme_id));
 
-  $sql = "SELECT contrib.*,
+    $sql = "SELECT contrib.*,
           user.display_name as display_name  $sql_base ";
-  $sql = $wpdb->prepare($sql
-                        ." LIMIT %d, %d",array($offset,$perpage));
-  $listing = $wpdb->get_results($sql, ARRAY_A);
+    $sql = $wpdb->prepare($sql
+                          ." LIMIT %d, %d",array($offset,$perpage));
+    $listing = $wpdb->get_results($sql, ARRAY_A);
 
-  $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
-  $count = $wpdb->get_var($sql);
-  return array($listing, $count);
+    $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
+    $count = $wpdb->get_var($sql);
+    return array($listing, $count);
 }
 
 function wpgp_db_govr_get_theme_counts() {
@@ -159,12 +159,12 @@ function wpgp_db_govr_get_contribs_count_by_theme($theme_id) {
 
 
 function wpgp_db_govr_create_contrib($title
-                                , $theme_id
-                                , $content
-                                , $user_id
-                                , $part
-                                , $moderation = 1
-                                , $parent = 0) {
+                                     , $theme_id
+                                     , $content
+                                     , $user_id
+                                     , $part
+                                     , $moderation = 1
+                                     , $parent = 0) {
 
     global $wpdb;
     $sql = $wpdb->prepare("
@@ -240,10 +240,10 @@ function wpgp_govr_contrib_remove_all_parts($contrib) {
 function wpgp_govr_contrib_append_part($contrib, $child) {
     global $wpdb;
     $wpdb->insert(
-        WPGP_GOVR_CONTRIBC_TABLE,
-        array("inverse_id"  => $contrib['id'],
-              "children_id" => $child['id'])
-    );
+                  WPGP_GOVR_CONTRIBC_TABLE,
+                  array("inverse_id"  => $contrib['id'],
+                        "children_id" => $child['id'])
+                  );
 }
 
 function wpgp_govr_contrib_has_duplicates($contrib) {
@@ -316,18 +316,18 @@ function wpgp_db_govr_contribs_scores($theme_id,
                                       $from,
                                       $to,
                                       $perpage = WPGP_CONTRIBS_PER_PAGE) {
-  global $wpdb;
-  $offset = $page * $perpage;
+    global $wpdb;
+    $offset = $page * $perpage;
 
-  $fromto = '';
-  if($from && $to) {
-      $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$from);
-      $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$to);
-      $fromto = " AND (DATE(contrib.created_at) > DATE($from)
+    $fromto = '';
+    if($from && $to) {
+        $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$from);
+        $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$to);
+        $fromto = " AND (DATE(contrib.created_at) > DATE($from)
                  AND DATE(contrib.created_at) < DATE($to)) ";
-  }
+    }
 
-  $sql_base = $wpdb->prepare("
+    $sql_base = $wpdb->prepare("
       FROM
           ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
       WHERE
@@ -337,26 +337,26 @@ function wpgp_db_govr_contribs_scores($theme_id,
            $fromto)
       ORDER BY score DESC", array($theme_id));
 
-  $sql = "SELECT contrib.*,
+    $sql = "SELECT contrib.*,
           user.display_name as display_name" . $sql_base;
 
-  $sql = $wpdb->prepare($sql
-                        ." LIMIT %d, %d",array($offset,$perpage));
-  $listing = $wpdb->get_results($sql, ARRAY_A);
+    $sql = $wpdb->prepare($sql
+                          ." LIMIT %d, %d",array($offset,$perpage));
+    $listing = $wpdb->get_results($sql, ARRAY_A);
 
-  $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
-  $count = $wpdb->get_var($sql);
+    $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
+    $count = $wpdb->get_var($sql);
 
-  $sql = $wpdb->prepare("SELECT SUM(contrib.score) $sql_base");
-  $votes = $wpdb->get_var($sql);
-  return array($listing, $count, $votes);
+    $sql = $wpdb->prepare("SELECT SUM(contrib.score) $sql_base");
+    $votes = $wpdb->get_var($sql);
+    return array($listing, $count, $votes);
 }
 
 
 function wpgp_db_govr_contrib_count_grouped_by_date($theme_id) {
     global $wpdb;
     $sql = $wpdb->prepare(
-      "SELECT
+                          "SELECT
         year(c.created_at) AS year,
         month(c.created_at) AS month,
         day(c.created_at) AS day,
@@ -370,20 +370,20 @@ function wpgp_db_govr_contrib_count_grouped_by_date($theme_id) {
 
 function wpgp_db_govr_get_summary($from, $to) {
 
-  $fromto = '';
-  if($from && $to) {
-      $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$from);
-      $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$to);
-      $fromto = " AND (DATE(created_at) > DATE($from)
+    $fromto = '';
+    if($from && $to) {
+        $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$from);
+        $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$to);
+        $fromto = " AND (DATE(created_at) > DATE($from)
                  AND DATE(created_at) < DATE($to)) ";
-  }
+    }
 
-  global $wpdb;
-  $sql = "SELECT
+    global $wpdb;
+    $sql = "SELECT
              COUNT(*) as total_contribs,
              SUM(score) as total_votes
             FROM wpgp_govr_contribs
             WHERE 1=1 $fromto";
-  return $wpdb->get_row($sql, ARRAY_A);
+    return $wpdb->get_row($sql, ARRAY_A);
 }
 ?>

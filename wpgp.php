@@ -44,12 +44,12 @@ include_once('wpgp.ajax.govp.php');
 include_once('wpgp.xmlrpc.php');
 
 function wpgp_install() {
-    add_role( 'wpgp_moderator', 'Moderador',
-              array('read' => true,
-                    'moderate_contrib' => true ));
+    add_role('wpgp_moderator', 'Moderador',
+             array('read' => true,
+                   'moderate_contrib' => true));
 
-    $role_object = get_role( 'administrator' );
-    $role_object->add_cap( 'moderate_contrib' );
+    $role_object = get_role('administrator');
+    $role_object->add_cap('moderate_contrib');
 
     global $wpdb;
     $sql = "CREATE TABLE " . WPGP_GOVR_THEME_TABLE . " (
@@ -127,7 +127,7 @@ function wpgp_install() {
 }
 
 function wpgp_uninstall() {
-    remove_role( 'wpgp_moderator');
+    remove_role('wpgp_moderator');
     $role_object = get_role('administrator');
     $role_object->remove_cap('moderate_contrib');
 
