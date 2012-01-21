@@ -60,19 +60,18 @@ function wpgp_db_govr_get_theme($id) {
     return $wpdb->get_row($sql, ARRAY_A);
 }
 
-function wpgp_db_govr_get_theme_contribs($theme_id,
-                                         $page = '0',
-                                         $sortby = 'contrib.id',
-                                         $from = null,
-                                         $to = null,
-                                         $status = 0,
-                                         $s = null,
-                                         $filter = null,
-                                         $perpage = WPGP_CONTRIBS_PER_PAGE) {
+function wpgp_db_govr_get_contribs($theme_id = null,
+                                   $page = '0',
+                                   $sortby = 'contrib.id',
+                                   $from = null,
+                                   $to = null,
+                                   $status = 0,
+                                   $s = null,
+                                   $filter = null,
+                                   $perpage = WPGP_CONTRIBS_PER_PAGE) {
     global $wpdb;
     $offset = $page * $perpage;
-    $sortfields = array(
-                        'id' => 'contrib.id' ,
+    $sortfields = array('id' => 'contrib.id' ,
                         'status' => 'contrib.status',
                         'date'  => 'contrib.created_at',
                         'author' => 'user.display_name',
@@ -100,17 +99,27 @@ function wpgp_db_govr_get_theme_contribs($theme_id,
                  AND DATE(contrib.created_at) < DATE($to)) ";
     }
 
-    $sql_base = $wpdb->prepare("
-      FROM
-          ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
-      WHERE
-          (contrib.theme_id=%d
-           AND contrib.user_id=user.ID
-           AND contrib.deleted=0)
-           $fromto $statusfilter
-           $filter $search
-      ORDER BY $sortfield
-    ", array($theme_id));
+    if ($theme_id && !empty($theme_id)) {
+        $sql_base = $wpdb->prepare("
+            FROM
+                ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
+            WHERE (contrib.theme_id = %d AND
+                   contrib.user_id = user.ID AND
+                   contrib.deleted = 0)
+                   $fromto $statusfilter
+                   $filter $search
+                   ORDER BY $sortfield",
+            array($theme_id));
+    } else {
+        $sql_base = "
+            FROM
+                ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
+            WHERE (contrib.user_id = user.ID AND
+                   contrib.deleted = 0)
+                   $fromto $statusfilter
+                   $filter $search
+                   ORDER BY $sortfield";
+    }
 
     $sql = "SELECT contrib.*,
           user.display_name as display_name  $sql_base ";
@@ -122,6 +131,23 @@ function wpgp_db_govr_get_theme_contribs($theme_id,
     $count = $wpdb->get_var($sql);
     return array($listing, $count);
 }
+
+
+function wpgp_db_govr_get_theme_contribs($theme_id,
+                                         $page = '0',
+                                         $sortby = 'contrib.id',
+                                         $from = null,
+                                         $to = null,
+                                         $status = 0,
+                                         $s = null,
+                                         $filter = null,
+                                         $perpage = WPGP_CONTRIBS_PER_PAGE) {
+
+    return wpgp_db_govr_get_contribs(
+        $theme_id, $page, $sortby, $from, $to,
+        $status, $s, $filter, $perpage);
+}
+
 
 function wpgp_db_govr_get_theme_counts() {
     global $wpdb;

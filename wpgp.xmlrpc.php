@@ -43,10 +43,37 @@ function wpgp_govr_createContrib($args) {
 }
 
 
+function wpgp_govr_getTheme($args) {
+    if (!is_array($args = _exapi_method_header($args))) {
+        return $args;
+    }
+    return wpgp_db_govr_get_theme($args[1]);
+}
+
+
+function wpgp_govr_getContribs($args) {
+    if (!is_array($args = _exapi_method_header($args))) {
+        return $args;
+    }
+    return wpgp_db_govr_get_contribs(
+        $args[1], // theme_id
+        $args[2], // page
+        $args[3], // sortby
+        $args[4], // from
+        $args[5], // to
+        $args[6], // status
+        $args[7], // filter
+        $args[8]  // perpage
+    );
+}
+
+
 /* Filter that registers our methods in the wordpress xmlrpc provider */
 add_filter('xmlrpc_methods', function ($methods) {
+    $methods['govr.getTheme'] = 'wpgp_govr_getTheme';
     $methods['govr.getThemes'] = 'wpgp_govr_getThemes';
     $methods['govr.createContrib'] = 'wpgp_govr_createContrib';
+    $methods['govr.getContribs'] = 'wpgp_govr_getContribs';
     return $methods;
 });
 
