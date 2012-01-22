@@ -16,6 +16,13 @@
  */
 
 
+function wpgp_db_govr_get_contrib_status() {
+    /* Please remember to update the enum in the SQL that builds the
+       table that stores contribs in the `wpgp.php' module. */
+    return array('pending', 'blocked', 'approved', 'responded');
+}
+
+
 function wpgp_db_govr_create_theme($name) {
     global $wpdb;
     $sql = $wpdb->prepare("
@@ -65,7 +72,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
                                    $sortby = 'contrib.id',
                                    $from = null,
                                    $to = null,
-                                   $status = 0,
+                                   $status = '',
                                    $filter = null,
                                    $perpage = WPGP_CONTRIBS_PER_PAGE) {
     global $wpdb;
@@ -84,10 +91,8 @@ function wpgp_db_govr_get_contribs($theme_id = null,
     }
 
     $statusfilter = '';
-    if ($status == 1) { //approved
-        $statusfilter = " AND contrib.status = 'approved' ";
-    } else if ($status == -1) { //everyone else
-        $statusfilter = " AND contrib.status <> 'approved' ";
+    if (!empty($status)) {
+        $statusfilter = " AND contrib.status = '$status' ";
     }
 
     $fromto = '';

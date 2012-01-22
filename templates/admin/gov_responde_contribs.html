@@ -49,22 +49,16 @@
 
   <div class="tablenav top">
     <div class="alignright actions">
+      {% for i in exec("wpgp_db_govr_get_contrib_status") %}
       <label>
-        {% if status == 1 %}
-        <strong>Approved</strong>
+        {% if status == i %}
+        <strong>{{ i|title }}</strong>
         {% else %}
-        <a href="{{ pageurl }}&status=1">Approved</a>
+        <a href="{{ pageurl }}&status={{ i }}">{{ i|title }}</a>
         {% endif %}
       </label>
       |
-      <label>
-        {% if status == -1 %}
-        <strong>Not approved</strong>
-        {% else %}
-        <a href="{{ pageurl }}&status=-1">Not approved</a>
-        {% endif %}
-      </label>
-      |
+      {% endfor %}
       <label>
         {% if status == '' %}
         <strong>All</strong>
