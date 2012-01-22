@@ -105,7 +105,9 @@ function wpgp_db_govr_get_contribs($theme_id = null,
 
     if ($theme_id && !empty($theme_id)) {
         $sql_base = $wpdb->prepare("
-            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
+            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib,
+                 ".WPGP_GOVR_CONTRIBC_TABLE." cchild,
+                 wp_users user
             WHERE (contrib.theme_id = %d AND
                    contrib.user_id = user.ID AND
                    contrib.deleted = 0)
@@ -114,7 +116,9 @@ function wpgp_db_govr_get_contribs($theme_id = null,
             array($theme_id));
     } else {
         $sql_base = "
-            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
+            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib,
+                 ".WPGP_GOVR_CONTRIBC_TABLE." cchild,
+                 wp_users user
             WHERE (contrib.user_id = user.ID AND
                    contrib.deleted = 0)
                    $fromto $statusfilter $filter
@@ -143,6 +147,33 @@ function wpgp_db_govr_get_theme_contribs($theme_id,
                                          $filter = null,
                                          $perpage = WPGP_CONTRIBS_PER_PAGE) {
 
+    return wpgp_db_govr_get_contribs(
+        $theme_id, $page, $sortby, $from, $to,
+        $status, $filter, $perpage);
+}
+
+
+/**
+ * Shortcut to lists contribs that are able to be voted
+ *
+ * The difference between this function and the generic _get_contribs()
+ * or the _get_theme_contribs() shortcut is that we'll not list contribs
+ * that were aggregated to another one.
+ *
+ * To be clear, if a contrib is a dupplication or a child of another
+ * one, it will not be listed here.
+ */
+function wpgp_db_govr_get_voting_contribs($theme_id,
+                                          $page = '0',
+                                          $sortby,
+                                          $from = null,
+                                          $to = null,
+                                          $perpage = WPGP_CONTRIBS_PER_PAGE) {
+    $status = 'approved';
+    $filter = " AND (
+        contrib.parent = 0 AND
+        contrib.id != cchild.children_id
+    )";
     return wpgp_db_govr_get_contribs(
         $theme_id, $page, $sortby, $from, $to,
         $status, $filter, $perpage);
