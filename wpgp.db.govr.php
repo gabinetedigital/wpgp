@@ -66,7 +66,6 @@ function wpgp_db_govr_get_contribs($theme_id = null,
                                    $from = null,
                                    $to = null,
                                    $status = 0,
-                                   $s = null,
                                    $filter = null,
                                    $perpage = WPGP_CONTRIBS_PER_PAGE) {
     global $wpdb;
@@ -93,40 +92,37 @@ function wpgp_db_govr_get_contribs($theme_id = null,
 
     $fromto = '';
     if($from && $to) {
-        $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$from);
-        $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'',$to);
-        $fromto = " AND (DATE(contrib.created_at) > DATE($from)
-                 AND DATE(contrib.created_at) < DATE($to)) ";
+        $from = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'', $from);
+        $to = preg_replace('/(\d+)\/(\d+)\/(\d+)/','\'${3}-${2}-${1}\'', $to);
+        $fromto = " AND (DATE(contrib.created_at) > DATE($from) AND
+                         DATE(contrib.created_at) < DATE($to)) ";
     }
 
     if ($theme_id && !empty($theme_id)) {
         $sql_base = $wpdb->prepare("
-            FROM
-                ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
+            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
             WHERE (contrib.theme_id = %d AND
                    contrib.user_id = user.ID AND
                    contrib.deleted = 0)
-                   $fromto $statusfilter
-                   $filter $search
+                   $fromto $statusfilter $filter
                    ORDER BY $sortfield",
             array($theme_id));
     } else {
         $sql_base = "
-            FROM
-                ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
+            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib, wp_users user
             WHERE (contrib.user_id = user.ID AND
                    contrib.deleted = 0)
-                   $fromto $statusfilter
-                   $filter $search
+                   $fromto $statusfilter $filter
                    ORDER BY $sortfield";
     }
 
-    $sql = "SELECT contrib.*,
-          user.display_name as display_name  $sql_base ";
-    $sql = $wpdb->prepare($sql
-                          ." LIMIT %d, %d",array($offset,$perpage));
+    /* Finish building the select and execute it */
+    $sql = "SELECT contrib.*, user.display_name as display_name  $sql_base ";
+    $sql = $wpdb->prepare($sql . " LIMIT %d, %d", array($offset, $perpage));
     $listing = $wpdb->get_results($sql, ARRAY_A);
 
+    /* Counting how many results were returned (without the LIMIT
+     * statement) */
     $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
     $count = $wpdb->get_var($sql);
     return array($listing, $count);
@@ -139,13 +135,12 @@ function wpgp_db_govr_get_theme_contribs($theme_id,
                                          $from = null,
                                          $to = null,
                                          $status = 0,
-                                         $s = null,
                                          $filter = null,
                                          $perpage = WPGP_CONTRIBS_PER_PAGE) {
 
     return wpgp_db_govr_get_contribs(
         $theme_id, $page, $sortby, $from, $to,
-        $status, $s, $filter, $perpage);
+        $status, $filter, $perpage);
 }
 
 

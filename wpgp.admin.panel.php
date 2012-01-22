@@ -38,7 +38,7 @@ function wpgp_show_gov_responde() {
         $ctx = array();
         $page = (int) (isset($_GET["paged"]) ? $_GET["paged"] : '1');
 
-        list($ctx['listing'],$ctx['count'])
+        list($ctx['listing'], $ctx['count'])
             = wpgp_db_govr_get_theme_contribs($_GET['theme_id']
                                               , $page-1
                                               , $_GET["sort"]
