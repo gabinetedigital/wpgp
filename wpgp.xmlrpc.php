@@ -63,7 +63,7 @@ function wpgp_govr_getContribs($args) {
         $args[5], // to
         $args[6], // status
         $args[7], // filter
-        $args[8]  // perpage
+        $args[8] ? $args[8] : WPGP_CONTRIBS_PER_PAGE // perpage
     );
 }
 
