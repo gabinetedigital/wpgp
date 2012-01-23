@@ -106,7 +106,6 @@ function wpgp_db_govr_get_contribs($theme_id = null,
     if ($theme_id && !empty($theme_id)) {
         $sql_base = $wpdb->prepare("
             FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib,
-                 ".WPGP_GOVR_CONTRIBC_TABLE." cchild,
                  wp_users user
             WHERE (contrib.theme_id = %d AND
                    contrib.user_id = user.ID AND
@@ -117,7 +116,6 @@ function wpgp_db_govr_get_contribs($theme_id = null,
     } else {
         $sql_base = "
             FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib,
-                 ".WPGP_GOVR_CONTRIBC_TABLE." cchild,
                  wp_users user
             WHERE (contrib.user_id = user.ID AND
                    contrib.deleted = 0)
@@ -170,9 +168,12 @@ function wpgp_db_govr_get_voting_contribs($theme_id,
                                           $to = null,
                                           $perpage = WPGP_CONTRIBS_PER_PAGE) {
     $status = 'approved';
-    $filter = " AND (
-        contrib.parent = 0 AND
-        contrib.id != cchild.children_id
+    $filter = " AND contrib.parent = 0 AND (
+        NOT EXISTS (SELECT 1
+        FROM
+           " . WPGP_GOVR_CONTRIB_TABLE . " contrib,
+           " . WPGP_GOVR_CONTRIBC_TABLE . " cchild
+        WHERE contrib.id != cchild.children_id)
     )";
     return wpgp_db_govr_get_contribs(
         $theme_id, $page, $sortby, $from, $to,
@@ -216,14 +217,12 @@ function wpgp_db_govr_get_contrib($id) {
  */
 function wpgp_db_govr_get_aggregated_contribs($parent) {
     global $wpdb;
-
     $sql = "SELECT contrib.*
-            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib,
-                 ".WPGP_GOVR_CONTRIBC_TABLE." cchild
-            WHERE
-                 contrib.parent = %d OR
-                 (contrib.id = cchild.children_id AND
-                  cchild.inverse_id = %d)";
+            FROM ".WPGP_GOVR_CONTRIB_TABLE." AS contrib
+               LEFT JOIN (".WPGP_GOVR_CONTRIBC_TABLE." AS cchild)
+               ON (contrib.id = cchild.children_id AND
+                   cchild.inverse_id = %d)
+            WHERE contrib.parent = %d";
     return $wpdb->get_results(
         $wpdb->prepare($sql, array($parent, $parent)),
         ARRAY_A);
@@ -235,14 +234,15 @@ function wpgp_db_govr_get_aggregated_contribs($parent) {
  */
 function wpgp_db_govr_contrib_is_aggregated($contrib) {
     global $wpdb;
-    $sql = "SELECT count(contrib.id)
-            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib,
-                 ".WPGP_GOVR_CONTRIBC_TABLE." cchild
+
+    $sql = "SELECT count(1)
+            FROM ".WPGP_GOVR_CONTRIB_TABLE." AS contrib
+               LEFT JOIN (".WPGP_GOVR_CONTRIBC_TABLE." AS cchild)
+               ON (contrib.id = cchild.children_id)
             WHERE
-                 contrib.id = %d AND
-                 contrib.parent = 0 AND
-                 contrib.id <> cchild.children_id";
-    return $wpdb->get_var($wpdb->prepare($sql, array($contrib))) == 0;
+               contrib.parent <> 0 AND
+               contrib.id = %d";
+    return $wpdb->get_var($wpdb->prepare($sql, array($contrib))) == 1;
 }
 
 
@@ -294,13 +294,11 @@ function wpgp_db_govr_contrib_vote($contrib, $user) {
 function wpgp_db_govr_get_contrib_score($contrib) {
     global $wpdb;
     $sql = "SELECT SUM(contrib.score)
-            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib,
-                 ".WPGP_GOVR_CONTRIBC_TABLE." cchild
-            WHERE
-                 contrib.id = %d OR
-                 contrib.parent = %d OR
-                 (contrib.id = cchild.children_id AND
-                  cchild.inverse_id = %d)";
+            FROM ".WPGP_GOVR_CONTRIB_TABLE." AS contrib
+               LEFT JOIN (".WPGP_GOVR_CONTRIBC_TABLE." AS cchild)
+               ON (contrib.id = cchild.children_id AND
+                   cchild.inverse_id = %d)
+            WHERE contrib.id = %d OR contrib.parent = %d";
     return $wpdb->get_var(
         $wpdb->prepare($sql, array($contrib, $contrib, $contrib)));
 }
