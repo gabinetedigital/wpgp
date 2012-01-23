@@ -161,7 +161,8 @@ function wpgp_db_govr_get_theme_contribs($theme_id,
  * To be clear, if a contrib is a dupplication or a child of another
  * one, it will not be listed here.
  */
-function wpgp_db_govr_get_voting_contribs($theme_id,
+function wpgp_db_govr_get_voting_contribs($user_id,
+                                          $theme_id,
                                           $page = '0',
                                           $sortby,
                                           $from = null,
@@ -175,9 +176,18 @@ function wpgp_db_govr_get_voting_contribs($theme_id,
            " . WPGP_GOVR_CONTRIBC_TABLE . " cchild
         WHERE contrib.id != cchild.children_id)
     )";
-    return wpgp_db_govr_get_contribs(
+    list($listing, $count) = wpgp_db_govr_get_contribs(
         $theme_id, $page, $sortby, $from, $to,
         $status, $filter, $perpage);
+    $ret = array();
+    foreach ($listing as $c) {
+        $c["real_score"] = wpgp_db_govr_get_contrib_score($c["id"]);
+        $c["aggregated"] = wpgp_db_govr_get_aggregated_contribs($c["id"]);
+        $c["user_can_vote"] = \
+            wpgp_db_govr_contrib_user_can_vote($c["id"], $user_id);
+        $ret[] = $c;
+    }
+    return array($ret, $count);
 }
 
 
@@ -201,11 +211,18 @@ function wpgp_db_govr_get_contrib_count() {
     return $wpdb->get_var($sql);
 }
 
-function wpgp_db_govr_get_contrib($id) {
+function wpgp_db_govr_get_contrib($id, $user_id) {
     global $wpdb;
     $sql = $wpdb->prepare("SELECT * FROM ".WPGP_GOVR_CONTRIB_TABLE."
                            WHERE id=%d",array($id));
-    return $wpdb->get_row($sql, ARRAY_A);
+    $c = $wpdb->get_row($sql, ARRAY_A);
+
+    /* Filling out some fields not returned by the following select */
+    $c["real_score"] = wpgp_db_govr_get_contrib_score($c["id"]);
+    $c["aggregated"] = wpgp_db_govr_get_aggregated_contribs($c["id"]);
+    $c["user_can_vote"] = \
+        wpgp_db_govr_contrib_user_can_vote($c["id"], $user_id);
+    return $c;
 }
 
 

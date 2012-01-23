@@ -55,7 +55,7 @@ function wpgp_govr_getContrib($args) {
     if (!is_array($args = _exapi_method_header($args))) {
         return $args;
     }
-    return wpgp_db_govr_get_contrib($args[1]);
+    return wpgp_db_govr_get_contrib($args[1], $args[2]);
 }
 
 
@@ -89,12 +89,13 @@ function wpgp_govr_getVotingContribs($args) {
         return $args;
     }
     return wpgp_db_govr_get_voting_contribs(
-        $args[1], // theme_id
-        $args[2], // page
-        $args[3], // sortby
-        $args[4], // from
-        $args[5], // to
-        $args[6] ? $args[6] : WPGP_CONTRIBS_PER_PAGE // perpage
+        $args[1], // user_id
+        $args[2], // theme_id
+        $args[3], // page
+        $args[4], // sortby
+        $args[5], // from
+        $args[6], // to
+        $args[7] ? $args[7] : WPGP_CONTRIBS_PER_PAGE // perpage
     );
 }
 
