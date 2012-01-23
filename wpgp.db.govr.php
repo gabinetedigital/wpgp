@@ -207,6 +207,29 @@ function wpgp_db_govr_get_contrib($id) {
     return $wpdb->get_row($sql, ARRAY_A);
 }
 
+
+/**
+ * Lists all contributions aggregated to a given contrib
+ *
+ * All contributions marked as dupplicated or as part of the `$parent'
+ * contrib are going to be listed here.
+ */
+function wpgp_db_govr_get_aggregated_contribs($parent) {
+    global $wpdb;
+
+    $sql = "SELECT contrib.*
+            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib,
+                 ".WPGP_GOVR_CONTRIBC_TABLE." cchild
+            WHERE
+                 contrib.parent = %d OR
+                 (contrib.id = cchild.children_id AND
+                  cchild.inverse_id = %d)";
+    return $wpdb->get_results(
+        $wpdb->prepare($sql, array($parent, $parent)),
+        ARRAY_A);
+}
+
+
 function wpgp_db_govr_get_contribs_count_by_theme($theme_id) {
     global $wpdb;
     $sql = $wpdb->prepare("SELECT COUNT(*) FROM ".WPGP_GOVR_CONTRIB_TABLE."
