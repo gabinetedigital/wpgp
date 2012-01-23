@@ -72,7 +72,7 @@ function wpgp_install() {
       parent int default 0,
       created_by_moderation int default 0,
       score float default 0,
-      resposta text,
+      answer text,
       UNIQUE KEY id (id)
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
     CREATE TABLE ". WPGP_GOVR_CONTRIBC_TABLE. " (
@@ -84,6 +84,7 @@ function wpgp_install() {
     CREATE TABLE ". WPGP_GOVR_USER_VOTES . " (
       user_id int not null,
       contrib_id int not null,
+      date datetime,
       PRIMARY KEY (user_id,contrib_id),
       KEY user_votes_user_fk (contrib_id)
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
