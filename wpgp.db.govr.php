@@ -369,10 +369,12 @@ function wpgp_db_govr_create_contrib($title
                                 $content, $parent, $moderation));
 
     $ret = $wpdb->query($sql);
+    $id = $wpdb->insert_id;
     if (strlen(trim($part)) > 0) {
-        $contrib = wpgp_db_govr_get_contrib($wpdb->insert_id);
+        $contrib = wpgp_db_govr_get_contrib($id);
         wpgp_govr_contrib_insert_parts($contrib, $part);
     }
+    wpgp_db_govr_contrib_vote($id, $user_id);
 }
 
 function wpgp_db_govr_delete_contrib($id, $hard = false) {
