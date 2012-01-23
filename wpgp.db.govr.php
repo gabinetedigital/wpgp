@@ -306,6 +306,28 @@ function wpgp_db_govr_get_contrib_score($contrib) {
 }
 
 
+/**
+ * Returns contribution stats of the informed user
+ *
+ * Just a simple way to know how many contributions and how many votes a
+ * user did.
+ */
+function wpgp_db_govr_get_user_stats($user) {
+    global $wpdb;
+
+    /* How many contribs */
+    $sql = "SELECT count(user_id) FROM " . WPGP_GOVR_CONTRIB_TABLE . "
+            WHERE user_id = %d";
+    $contribs = $wpdb->get_var($wpdb->prepare($sql, array($user)));
+
+    /* How many votes */
+    $sql = "SELECT count(user_id) FROM " . WPGP_GOVR_USER_VOTES . "
+            WHERE user_id = %d";
+    $votes = $wpdb->get_var($wpdb->prepare($sql, array($user)));
+    return array("contribs" => $contribs, "votes" => $votes);
+}
+
+
 function wpgp_db_govr_get_contribs_count_by_theme($theme_id) {
     global $wpdb;
     $sql = $wpdb->prepare("SELECT COUNT(*) FROM ".WPGP_GOVR_CONTRIB_TABLE."
