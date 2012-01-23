@@ -107,6 +107,14 @@ function wpgp_govr_contribVote($args) {
 }
 
 
+function wpgp_govr_getContribScore($args) {
+    if (!is_array($args = _exapi_method_header($args))) {
+        return $args;
+    }
+    return wpgp_db_govr_get_contrib_score($args[1]);
+}
+
+
 /* Filter that registers our methods in the wordpress xmlrpc provider */
 add_filter('xmlrpc_methods', function ($methods) {
     $methods['govr.getTheme'] = 'wpgp_govr_getTheme';
@@ -117,6 +125,7 @@ add_filter('xmlrpc_methods', function ($methods) {
     $methods['govr.getAggregatedContribs'] = 'wpgp_govr_getAggregatedContribs';
     $methods['govr.contribVote'] = 'wpgp_govr_contribVote';
     $methods['govr.contribUserCanVote'] = 'wpgp_govr_contribUserCanVote';
+    $methods['govr.getContribScore'] = 'wpgp_govr_getContribScore';
     return $methods;
 });
 

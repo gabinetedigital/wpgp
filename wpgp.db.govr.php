@@ -264,7 +264,29 @@ function wpgp_db_govr_contrib_vote($contrib, $user) {
     $wpdb->insert(WPGP_GOVR_USER_VOTES,
                   array("contrib_id" => $contrib,
                         "user_id" => $user));
-    return true;
+    return wpgp_db_govr_get_contrib_score($contrib);
+}
+
+
+/**
+ * Returns the score of a contrib and all its aggregations
+ *
+ * Instead of just returning the value of the `contrib.score' field,
+ * this function finds all aggregated contribs (based on the `$contrib'
+ * param) and sum all of its score fields.
+ */
+function wpgp_db_govr_get_contrib_score($contrib) {
+    global $wpdb;
+    $sql = "SELECT SUM(contrib.score)
+            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib,
+                 ".WPGP_GOVR_CONTRIBC_TABLE." cchild
+            WHERE
+                 contrib.id = %d OR
+                 contrib.parent = %d OR
+                 (contrib.id = cchild.children_id AND
+                  cchild.inverse_id = %d)";
+    return $wpdb->get_var(
+        $wpdb->prepare($sql, array($contrib, $contrib, $contrib)));
 }
 
 
