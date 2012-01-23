@@ -231,6 +231,22 @@ function wpgp_db_govr_get_aggregated_contribs($parent) {
 
 
 /**
+ * Returns true if a contrib is aggregated to another one
+ */
+function wpgp_db_govr_contrib_is_aggregated($contrib) {
+    global $wpdb;
+    $sql = "SELECT count(contrib.id)
+            FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib,
+                 ".WPGP_GOVR_CONTRIBC_TABLE." cchild
+            WHERE
+                 contrib.id = %d AND
+                 contrib.parent = 0 AND
+                 contrib.id <> cchild.children_id";
+    return $wpdb->get_var($wpdb->prepare($sql, array($contrib))) == 0;
+}
+
+
+/**
  * Returns a bool value indicating if an user can vote in a contrib
  *
  * This is needed because an user can't vote in the same contrib more

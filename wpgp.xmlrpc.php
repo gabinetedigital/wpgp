@@ -51,6 +51,14 @@ function wpgp_govr_getTheme($args) {
 }
 
 
+function wpgp_govr_contribIsAggregated($args) {
+    if (!is_array($args = _exapi_method_header($args))) {
+        return $args;
+    }
+    return wpgp_db_govr_contrib_is_aggregated($args[1]);
+}
+
+
 function wpgp_govr_getContribs($args) {
     if (!is_array($args = _exapi_method_header($args))) {
         return $args;
@@ -126,6 +134,7 @@ add_filter('xmlrpc_methods', function ($methods) {
     $methods['govr.contribVote'] = 'wpgp_govr_contribVote';
     $methods['govr.contribUserCanVote'] = 'wpgp_govr_contribUserCanVote';
     $methods['govr.getContribScore'] = 'wpgp_govr_getContribScore';
+    $methods['govr.contribIsAggregated'] = 'wpgp_govr_contribIsAggregated';
     return $methods;
 });
 
