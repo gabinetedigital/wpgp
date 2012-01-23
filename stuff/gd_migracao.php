@@ -27,6 +27,9 @@ $newlink = null;
 
 $pairwise_link = null;
 
+/* -- Helper functions, they just support the rest of the really useful
+      code present here -- */
+
 function pairwise_link() {
   global $pairwise_link;
   if ($pairwise_link) return $pairwise_link;
@@ -81,62 +84,178 @@ function get_results($link, $sql) {
   return $ret;
 }
 
+/* -- Public helper API -- */
+
+function results_old($sql) {
+  return get_results(get_old_link(), $sql);
+}
+
+
+function results_new($sql) {
+  return get_results(get_new_link(), $sql);
+}
+
+
+function query_new($sql) {
+  return mysql_query($sql, get_new_link());
+}
+
+
+function error_new() {
+  return mysql_error(get_new_link());
+}
+
+
+/* -- Theme related functions -- */
+
+
 function import_themes() {
-  foreach(get_results(get_old_link(), "SELECT * FROM GD_TEMA") as $theme) {
-    $sql = "INSERT INTO wpgp_govr_themes (id, name, created_at) VALUES
-          ('$theme[NRO_INT_TEMA]','$theme[NOME_TEMA]', now())";
-    if (!mysql_query($sql, get_new_link())) {
-      throw new Exception(mysql_error(get_new_link()));
+  foreach (results_old("SELECT * FROM GD_TEMA") as $theme) {
+    $id = $theme['NRO_INT_TEMA'];
+
+    /* Avoiding duplications */
+    if (($r = results_new("SELECT * FROM wpgp_govr_themes WHERE id = $id"))) {
+      continue;
+    }
+
+    /* Inserting a new theme */
+    $sql = "INSERT INTO wpgp_govr_themes (
+                id, name, created_at
+            ) VALUES (
+                '$id','$theme[NOME_TEMA]', now()
+            )";
+    if (!query_new($sql)) {
+      throw new Exception(error_new());
     }
   }
 }
 
+
+/* -- User import functions -- */
+
+
 function import_users() {
   $usermap = array();
-  foreach(get_results(get_old_link(),"SELECT * FROM GD_INTERNAUTA") as $u) {
-    $sql = "INSERT INTO wp_users
-            (user_login,user_pass,user_nicename,user_email, user_status,
-            display_name)
-            VALUES
-            ('$u[TXT_EMAIL]','','$u[NOME_INTERNAUTA]','$u[TXT_EMAIL]',
-             1, '$u[NOME_INTERNAUTA]')";
-    if (!mysql_query($sql, get_new_link())) {
-      throw new Exception(mysql_error(get_new_link()));
+  foreach (results_old("SELECT * FROM CMS_CONTATO") as $u) {
+    $email = $u['TXT_EMAIL'];
+
+    /* avoiding duplication, useful for users that registered again in
+     * the new site and for multiple executions of this script. Even
+     * here we associate the user id to the bizarre NRO_INT_INTERNAUTA
+     * code to be used in the question and voting import function */
+    if (($r = results_new("SELECT * FROM wp_users WHERE user_login = '$email'"))) {
+      $usermap[$u['COD_CONTATO']] = $r[0]['ID'];
+      continue;
     }
-    $usermap[$u['NRO_INT_INTERNAUTA']] = mysql_insert_id(get_new_link());
+
+    /* A new user! */
+    $sql = "INSERT INTO wp_users (
+                user_login,
+                user_pass,
+                user_nicename,
+                user_email,
+                user_status,
+                user_registered,
+                display_name
+           ) VALUES (
+                '$email',
+                '',
+                \"$u[TXT_NOME]\",
+                '$email',
+                1,
+                '$u[CTR_DTH_INC]',
+                \"$u[TXT_NOME]\"
+           )";
+
+    if (!query_new($sql)) {
+      print $sql;
+      throw new Exception(error_new());
+    }
+
+    /* Associating the new user to the map that will be used in the
+     * function that imports questions and votes */
+    $usermap[$u['COD_CONTATO']] = mysql_insert_id(get_new_link());
   }
   return $usermap;
 }
 
+
+function map_contato_internalta($usermap) {
+  $newmap = array();
+  foreach ($usermap as $cod => $wpuserid) {
+    $sql = "SELECT * FROM GD_INTERNAUTA WHERE NRO_GABDIGITAL = " . $cod;
+    if (($r = results_old($sql))) {
+      $newmap[$r[0]['NRO_INT_INTERNAUTA']] = array(
+        'wp_users_id' => $wpuserid,
+        'cod_contato' => $cod,
+      );
+    }
+  }
+  return $newmap;
+}
+
+
+/* -- Import contribs for govr -- */
+
+
 function import_contrib($usermap) {
   global $status;
-  foreach(get_results(get_old_link(),"SELECT * FROM GD_PERGUNTA") as $c) {
-    $sql = "INSERT INTO wpgp_govr_contribs
-            (title,
-             theme_id,
-             content,
-             user_id,
-             original,
-             created_at,
-             status, parent, score, resposta)
-            VALUES
-            ('$c[NOME_PERGUNTA]',
-             '$c[NRO_TEMA]',
-             '$c[DESCR_PERGUNTA]',
-             '".$usermap[$c['NRO_INTERNAUTA']]."',
-             '$c[DESCR_PERGUNTA]',
-             '$c[DTH_CRIACAO]',
-             '".$status[$c['TXT_STATUS']]."',
-             '$c[NRO_PERGUNTA_JUNTADO]', '$c[NRO_VOTOS]','$c[TXT_RESPOSTA]')";
-    if (!mysql_query($sql, get_new_link())) {
-      throw new Exception(mysql_error(get_new_link()));
+  $contribmap = array();
+  foreach (results_old("SELECT * FROM GD_PERGUNTA") as $c) {
+    $wpuserid = $usermap[$c['NRO_INTERNAUTA']]['wp_users_id'];
+    $status_str = $status[$c['TXT_STATUS']];
+    $sql = "INSERT INTO wpgp_govr_contribs (
+                title,
+                theme_id,
+                content,
+                user_id,
+                original,
+                created_at,
+                status,
+                parent,
+                score,
+                answer
+            ) VALUES (
+                '$c[NOME_PERGUNTA]',
+                '$c[NRO_TEMA]',
+                '$c[DESCR_PERGUNTA]',
+                '$wpuserid',
+                '$c[DESCR_PERGUNTA]',
+                '$c[DTH_CRIACAO]',
+                '$status_str',
+                '$c[NRO_PERGUNTA_JUNTADO]',
+                '$c[NRO_VOTOS]',
+                '$c[TXT_RESPOSTA]'
+            )";
+    if (!query_new($sql)) {
+      throw new Exception(error_new());
+    }
+    $contribmap[$c['NRO_INT_PERGUNTA']] = mysql_insert_id(get_new_link());
+  }
+  return $contribmap;
+}
+
+
+function import_votes($usermap, $contribs) {
+  foreach (results_old("SELECT * FROM GD_PERGUNTA_TEM_VOTO") as $old_contrib) {
+    $new_question_id = $contribs[$old_contrib['NRO_INT_PERGUNTA']];
+    $new_user_id = $usermap[$old_contrib['NRO_INT_PERGUNTA']]['wp_users_id'];
+    $sql = "INSERT INTO wpgp_govr_user_votes (user_id, contrib_id, date) VALUES (
+      $new_user_id, $new_question_id, '$old_contrib[DTH_VOTO]'
+    )";
+    if (!query_new($sql)) {
+      print $sql . "\n";
+      throw new Exception(error_new());
     }
   }
 }
 
+
 function govr() {
   import_themes();
-  import_contrib(import_users());
+  $newmap = map_contato_internalta(import_users());
+  $contribs = import_contrib($newmap);
+  import_votes($newmap, $contribs);
 }
 
 function govp() {
@@ -239,5 +358,5 @@ function govp() {
 }
 
 govr();
-govp();
+/* govp(); */
 ?>
