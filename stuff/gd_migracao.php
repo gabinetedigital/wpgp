@@ -136,16 +136,32 @@ function import_themes() {
 
 function import_users() {
   $usermap = array();
-  foreach (results_old("SELECT * FROM CMS_CONTATO") as $u) {
-    $email = $u['TXT_EMAIL'];
+  $basesql = "SELECT distinct(TXT_EMAIL), NRO_INT_INTERNAUTA, DTH_CADASTRO
+              FROM GD_INTERNAUTA";
+  foreach (results_old($basesql) as $i) {
+    $nroi = $i['NRO_INT_INTERNAUTA'];
+    $email = $i['TXT_EMAIL'];
 
     /* avoiding duplication, useful for users that registered again in
      * the new site and for multiple executions of this script. Even
      * here we associate the user id to the bizarre NRO_INT_INTERNAUTA
      * code to be used in the question and voting import function */
     if (($r = results_new("SELECT * FROM wp_users WHERE user_login = '$email'"))) {
-      $usermap[$u['COD_CONTATO']] = $r[0]['ID'];
+      $usermap[$nroi] = $r[0]['ID'];
       continue;
+    }
+
+    if (($r1 = results_old("SELECT * FROM CMS_CONTATO WHERE TXT_EMAIL = '$email'"))) {
+      $u = $r1[0];
+      $user = array("login" => $email,
+                    "name"  => $u['TXT_NOME'],
+                    "email" => $email,
+                    "date"  => $u['CTR_DTH_INC']);
+    } else {
+      $user = array("login" => $email,
+                    "name"  => $email,
+                    "email" => $email,
+                    "date"  => $i['DTH_CADASTRO']);
     }
 
     /* A new user! */
@@ -158,13 +174,13 @@ function import_users() {
                 user_registered,
                 display_name
            ) VALUES (
-                '$email',
+                \"$user[email]\",
                 '',
-                \"$u[TXT_NOME]\",
-                '$email',
+                \"$user[name]\",
+                \"$user[email]\",
                 1,
-                '$u[CTR_DTH_INC]',
-                \"$u[TXT_NOME]\"
+                \"$user[date]\",
+                \"$user[name]\"
            )";
 
     if (!query_new($sql)) {
@@ -174,24 +190,9 @@ function import_users() {
 
     /* Associating the new user to the map that will be used in the
      * function that imports questions and votes */
-    $usermap[$u['COD_CONTATO']] = mysql_insert_id(get_new_link());
+    $usermap[$nroi] = mysql_insert_id(get_new_link());
   }
   return $usermap;
-}
-
-
-function map_contato_internalta($usermap) {
-  $newmap = array();
-  foreach ($usermap as $cod => $wpuserid) {
-    $sql = "SELECT * FROM GD_INTERNAUTA WHERE NRO_GABDIGITAL = " . $cod;
-    if (($r = results_old($sql))) {
-      $newmap[$r[0]['NRO_INT_INTERNAUTA']] = array(
-        'wp_users_id' => $wpuserid,
-        'cod_contato' => $cod,
-      );
-    }
-  }
-  return $newmap;
 }
 
 
@@ -201,9 +202,19 @@ function map_contato_internalta($usermap) {
 function import_contrib($usermap) {
   global $status;
   $contribmap = array();
-  foreach (results_old("SELECT * FROM GD_PERGUNTA") as $c) {
-    $wpuserid = $usermap[$c['NRO_INTERNAUTA']]['wp_users_id'];
+  foreach (results_old("SELECT * FROM GD_PERGUNTA ORDER BY NRO_INT_PERGUNTA") as $c) {
+    $oldcontrib = $c['NRO_INT_PERGUNTA'];
+    $wpuserid = $usermap[$c['NRO_INTERNAUTA']];
     $status_str = $status[$c['TXT_STATUS']];
+
+    /* Skipping already added contribs */
+    $sql = "SELECT * FROM wpgp_govr_contribs WHERE title = '" .
+      $c['NOME_PERGUNTA'] . "' AND user_id = " . $wpuserid;
+    if (($r = results_new($sql))) {
+      $contribmap[$oldcontrib] = $r[0]['id'];
+      continue;
+    }
+
     $sql = "INSERT INTO wpgp_govr_contribs (
                 title,
                 theme_id,
@@ -230,22 +241,49 @@ function import_contrib($usermap) {
     if (!query_new($sql)) {
       throw new Exception(error_new());
     }
-    $contribmap[$c['NRO_INT_PERGUNTA']] = mysql_insert_id(get_new_link());
+    $contribmap[$oldcontrib] = mysql_insert_id(get_new_link());
   }
   return $contribmap;
 }
 
 
 function import_votes($usermap, $contribs) {
-  foreach (results_old("SELECT * FROM GD_PERGUNTA_TEM_VOTO") as $old_contrib) {
-    $new_question_id = $contribs[$old_contrib['NRO_INT_PERGUNTA']];
-    $new_user_id = $usermap[$old_contrib['NRO_INT_PERGUNTA']]['wp_users_id'];
+  foreach (results_old("SELECT * FROM GD_PERGUNTA_TEM_VOTO") as $c) {
+    $np = $c['NRO_INT_PERGUNTA'];
+    $nu = $c['NRO_INT_INTERNAUTA'];
+    $new_question_id = $contribs[$np];
+    $new_user_id = $usermap[$nu];
+
+    if (empty($new_question_id)) {
+      print_r($c);
+      throw new Exception('Could not find a qid for ' . $np);
+    }
+
+    if (empty($new_user_id)) {
+      print_r($c);
+      throw new Exception('Could not find a uid for ' . $nu);
+    }
+
+    /* Skipping duplicated registers */
+    $sql = "SELECT * FROM wpgp_govr_user_votes
+            WHERE user_id = $new_user_id AND
+                  contrib_id = $new_question_id";
+    if (($r = results_new($sql))) {
+      print_r($r);
+      continue;
+    }
+
     $sql = "INSERT INTO wpgp_govr_user_votes (user_id, contrib_id, date) VALUES (
-      $new_user_id, $new_question_id, '$old_contrib[DTH_VOTO]'
+      $new_user_id, $new_question_id, '$c[DTH_VOTO]'
     )";
-    if (!query_new($sql)) {
-      print $sql . "\n";
-      throw new Exception(error_new());
+
+    try {
+      if (!query_new($sql)) {
+        throw new Exception(error_new());
+      }
+    } catch (Exception $exc) {
+        print $sql . "\n";
+        throw $exc;
     }
   }
 }
@@ -253,9 +291,24 @@ function import_votes($usermap, $contribs) {
 
 function govr() {
   import_themes();
-  $newmap = map_contato_internalta(import_users());
-  $contribs = import_contrib($newmap);
-  import_votes($newmap, $contribs);
+
+  $cachefile = "cache/usermap";
+  if (file_exists($cachefile)) {
+    $usermap = unserialize(file_get_contents($cachefile));
+  } else {
+    $usermap = import_users();
+    file_put_contents($cachefile, serialize($usermap));
+  }
+
+  $cachefile = "cache/contribs";
+  if (file_exists($cachefile)) {
+    $contribs = unserialize(file_get_contents($cachefile));
+  } else {
+    $contribs = import_contrib($usermap);
+    file_put_contents($cachefile, serialize($contribs));
+  }
+
+  import_votes($usermap, $contribs);
 }
 
 function govp() {
