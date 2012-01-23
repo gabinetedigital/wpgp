@@ -215,6 +215,12 @@ function import_contrib($usermap) {
       continue;
     }
 
+    /* Resolving aggregated questions */
+    $aggregated = '0';
+    if (!empty($c['NRO_PERGUNTA_JUNTADO'])) {
+      $aggregated = $contribmap[$c['NRO_PERGUNTA_JUNTADO']];
+    }
+
     $sql = "INSERT INTO wpgp_govr_contribs (
                 title,
                 theme_id,
@@ -234,7 +240,7 @@ function import_contrib($usermap) {
                 '$c[DESCR_PERGUNTA]',
                 '$c[DTH_CRIACAO]',
                 '$status_str',
-                '$c[NRO_PERGUNTA_JUNTADO]',
+                '$aggregated',
                 '$c[NRO_VOTOS]',
                 '$c[TXT_RESPOSTA]'
             )";
