@@ -230,6 +230,44 @@ function wpgp_db_govr_get_aggregated_contribs($parent) {
 }
 
 
+/**
+ * Returns a bool value indicating if an user can vote in a contrib
+ *
+ * This is needed because an user can't vote in the same contrib more
+ * than once. So we store each vote made by a user and test it before
+ * inserting a new vote.
+ */
+function wpgp_db_govr_contrib_user_can_vote($contrib, $user) {
+    global $wpdb;
+    $sql = "SELECT count(user_id) FROM " . WPGP_GOVR_USER_VOTES . "
+            WHERE contrib_id = %d AND user_id = %d";
+    return $wpdb->get_var($wpdb->prepare($sql, array($contrib, $user))) == 0;
+}
+
+
+/**
+ * Increments a new vote to the score field of a contrib
+ *
+ * This field does not care about aggregated contribs, once it receives
+ * an Id, it's score will be incremented plus one.
+ */
+function wpgp_db_govr_contrib_vote($contrib, $user) {
+    global $wpdb;
+
+    if (!wpgp_db_govr_contrib_user_can_vote($contrib, $user))
+        return false;
+
+    $sql = "UPDATE ".WPGP_GOVR_CONTRIB_TABLE."
+            SET score = score + 1
+            WHERE id = %d";
+    $wpdb->query($wpdb->prepare($sql, array($contrib)));
+    $wpdb->insert(WPGP_GOVR_USER_VOTES,
+                  array("contrib_id" => $contrib,
+                        "user_id" => $user));
+    return true;
+}
+
+
 function wpgp_db_govr_get_contribs_count_by_theme($theme_id) {
     global $wpdb;
     $sql = $wpdb->prepare("SELECT COUNT(*) FROM ".WPGP_GOVR_CONTRIB_TABLE."

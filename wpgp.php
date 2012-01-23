@@ -27,6 +27,7 @@ License: AGPL3
 define('WPGP_GOVR_THEME_TABLE','wpgp_govr_themes');
 define('WPGP_GOVR_CONTRIB_TABLE','wpgp_govr_contribs');
 define('WPGP_GOVR_CONTRIBC_TABLE', 'wpgp_govr_contrib_children');
+define('WPGP_GOVR_USER_VOTES', 'wpgp_govr_user_votes');
 define('WPGP_GOVP_SESSION_TABLE','wpgp_govp_sessions');
 define('WPGP_GOVP_CONTRIB_TABLE','wpgp_govp_contribs');
 define('WPGP_GOVP_CONTRIBC_TABLE', 'wpgp_govp_contrib_children');
@@ -79,6 +80,12 @@ function wpgp_install() {
       children_id int not null,
       PRIMARY KEY (inverse_id,children_id),
       KEY contrib_children_inverse_fk (children_id)
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+    CREATE TABLE ". WPGP_GOVR_USER_VOTES . " (
+      user_id int not null,
+      contrib_id int not null,
+      PRIMARY KEY (user_id,contrib_id),
+      KEY user_votes_user_fk (contrib_id)
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
     CREATE TABLE ". WPGP_GOVP_SESSION_TABLE . " (
       id int NOT NULL AUTO_INCREMENT,
