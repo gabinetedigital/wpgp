@@ -61,18 +61,20 @@ function wpgp_install() {
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
     CREATE TABLE " . WPGP_GOVR_CONTRIB_TABLE . " (
       id int NOT NULL AUTO_INCREMENT,
-      title varchar(1000) NOT NULL,
+      title varchar(256) NOT NULL,
       theme_id int NOT NULL,
       content text NOT NULL,
       user_id int(11) NOT NULL,
       original text,
       created_at datetime,
+      answered_at datetime,
       status enum('pending','blocked','approved','responded') default 'pending',
       deleted int default 0,
       parent int default 0,
       created_by_moderation int default 0,
       score float default 0,
       answer text,
+      data varchar(256),
       UNIQUE KEY id (id)
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
     CREATE TABLE ". WPGP_GOVR_CONTRIBC_TABLE. " (
