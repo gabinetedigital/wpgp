@@ -68,6 +68,7 @@ function wpgp_db_govr_get_theme($id) {
 }
 
 function wpgp_db_govr_get_contribs($theme_id = null,
+                                   $user_id = null,
                                    $page = '0',
                                    $sortby = 'contrib.id',
                                    $from = null,
@@ -148,6 +149,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
 
 
 function wpgp_db_govr_get_theme_contribs($theme_id,
+                                         $user_id = null,
                                          $page = '0',
                                          $sortby = 'contrib.id',
                                          $from = null,
@@ -157,7 +159,7 @@ function wpgp_db_govr_get_theme_contribs($theme_id,
                                          $perpage = WPGP_CONTRIBS_PER_PAGE) {
 
     return wpgp_db_govr_get_contribs(
-        $theme_id, $page, $sortby, $from, $to,
+        $theme_id, $user_id, $page, $sortby, $from, $to,
         $status, $filter, $perpage);
 }
 
@@ -172,8 +174,8 @@ function wpgp_db_govr_get_theme_contribs($theme_id,
  * To be clear, if a contrib is a dupplication or a child of another
  * one, it will not be listed here.
  */
-function wpgp_db_govr_get_voting_contribs($user_id,
-                                          $theme_id,
+function wpgp_db_govr_get_voting_contribs($theme_id = null,
+                                          $user_id = null,
                                           $page = '0',
                                           $sortby,
                                           $from = null,
@@ -188,7 +190,7 @@ function wpgp_db_govr_get_voting_contribs($user_id,
         WHERE contrib.id != cchild.children_id)
     )";
     return wpgp_db_govr_get_contribs(
-        $theme_id, $page, $sortby, $from, $to,
+        $theme_id, $user_id, $page, $sortby, $from, $to,
         $status, $filter, $perpage);
 }
 

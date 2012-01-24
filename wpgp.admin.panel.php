@@ -40,6 +40,7 @@ function wpgp_show_gov_responde() {
 
         list($ctx['listing'], $ctx['count'])
             = wpgp_db_govr_get_theme_contribs($_GET['theme_id']
+                                              , null // user_id
                                               , $page-1
                                               , $_GET["sort"]
                                               , $_GET['from']
