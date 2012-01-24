@@ -137,6 +137,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
     /* Filling out some things this function does not find */
     $ret = array();
     foreach ($listing as $c) {
+        $c["theme"] = wpgp_db_govr_get_theme($c["theme_id"]);
         $c["real_score"] = wpgp_db_govr_get_contrib_score($c["id"]);
         $c["aggregated"] = wpgp_db_govr_get_aggregated_contribs($c["id"]);
         $c["user_can_vote"] = \
