@@ -132,7 +132,18 @@ function wpgp_db_govr_get_contribs($theme_id = null,
      * statement) */
     $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
     $count = $wpdb->get_var($sql);
-    return array($listing, $count);
+
+    /* Filling out some things this function does not find */
+    $ret = array();
+    foreach ($listing as $c) {
+        $c["real_score"] = wpgp_db_govr_get_contrib_score($c["id"]);
+        $c["aggregated"] = wpgp_db_govr_get_aggregated_contribs($c["id"]);
+        $c["user_can_vote"] = \
+            wpgp_db_govr_contrib_user_can_vote($c["id"], $user_id);
+        $ret[] = $c;
+    }
+    return array($ret, $count);
+
 }
 
 
@@ -176,18 +187,9 @@ function wpgp_db_govr_get_voting_contribs($user_id,
            " . WPGP_GOVR_CONTRIBC_TABLE . " cchild
         WHERE contrib.id != cchild.children_id)
     )";
-    list($listing, $count) = wpgp_db_govr_get_contribs(
+    return wpgp_db_govr_get_contribs(
         $theme_id, $page, $sortby, $from, $to,
         $status, $filter, $perpage);
-    $ret = array();
-    foreach ($listing as $c) {
-        $c["real_score"] = wpgp_db_govr_get_contrib_score($c["id"]);
-        $c["aggregated"] = wpgp_db_govr_get_aggregated_contribs($c["id"]);
-        $c["user_can_vote"] = \
-            wpgp_db_govr_contrib_user_can_vote($c["id"], $user_id);
-        $ret[] = $c;
-    }
-    return array($ret, $count);
 }
 
 
