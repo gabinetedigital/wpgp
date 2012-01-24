@@ -56,3 +56,13 @@ div.children ul li { display:block; float:left; margin-right:10px;
 .contrib-id {
     font-weight: bold;
 }
+
+/* -- answer form -- */
+.answer form {
+    width:50%;
+}
+
+.answer form textarea {
+    height:150px;
+}
+

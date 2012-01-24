@@ -99,6 +99,15 @@
       </ul>
     </div>
     {% endif %}
+
+    {% if contrib.status == 'approved' %}
+    <div class="smenu">
+      <br>
+      <a href="admin.php?page=gov-responde&subpage=answer&contrib_id={{ contrib.id }}">
+        Answer this question
+      </a>
+    </div>
+    {% endif %}
   </td>
   <td>
     <a href="{{siteurl}}/wp-admin/user-edit.php?user_id={{ contrib.user_id }}">

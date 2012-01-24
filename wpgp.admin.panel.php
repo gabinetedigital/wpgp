@@ -103,6 +103,13 @@ function wpgp_show_gov_responde() {
         echo $renderer->render('admin/gov_responde_stats.html', $ctx);
     }
 
+    function show_answer_form() {
+        $renderer = wpgp_renderer();
+        $ctx = array();
+        $ctx['contrib'] = wpgp_db_govr_get_contrib($_GET['contrib_id']);
+        echo $renderer->render('admin/gov_responde_answer.html', $ctx);
+    }
+
     switch($_GET['subpage']) {
     case 'contributions':
         show_contributions();
@@ -112,6 +119,9 @@ function wpgp_show_gov_responde() {
         break;
     case 'stats':
         show_stats();
+        break;
+    case 'answer':
+        show_answer_form();
         break;
     default:
         show_themes();
