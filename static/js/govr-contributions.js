@@ -156,7 +156,7 @@ jQuery(function() {
     var new_parent = self.val();
 
     if (is_child(new_parent)) {
-      alert("Can't be a duplicated of a duplicated")
+      alert("Can't be a duplicated of a duplicated");
       self.val(parent);
       return;
     }

@@ -29,16 +29,6 @@
       </select>
   </td>
 
-
-  <td>
-    {% if contrib.created_by_moderation == 0 %}
-    <input
-       type="text" id="contrib-duplicate[{{contrib.id}}]"
-       class="contrib-duplicates contrib-duplicate[{{contrib.parent}}]"
-       value="{{ contrib.parent }}" style="width:95%">
-    {% endif %}
-  </td>
-
   <td id="contrib-theme[{{contrib.id}}]"
       class="contrib-theme">
     <input type="hidden"
@@ -63,11 +53,18 @@
       class="contribution">
     <p>{{ contrib.content }}</p>
 
-    {% if contrib.parent > 0 %}
-    <div class="parent">
-      <strong>Parent:</strong> #{{ contrib.parent }}
+    <div class="smenu parent">
+      <strong>Parent:</strong>
+      {% if contrib.created_by_moderation == 0 %}
+      <input
+         type="text" id="contrib-duplicate[{{contrib.id}}]"
+         class="contrib-duplicates contrib-duplicate[{{contrib.parent}}]"
+         value="{{ contrib.parent }}">
+      {% else %}
+      #{{ contrib.parent }}
+      {% endif %}
     </div>
-    {% else %}
+    {% if contrib.parent == 0 %}
     <div class="smenu">
       <label>
         <strong>Part of:</strong>

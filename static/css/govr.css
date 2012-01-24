@@ -14,9 +14,21 @@ div.duplications ul li,
 div.children ul li { display:block; float:left; margin-right:10px;
     line-height:200% !important; }
 
-.contribution textarea {
+#contrib-rows input, #contrib-rows select {
+    width:100%;
+}
+
+#contrib-rows .contribution textarea {
     width: 100%;
     height: 200px;
+}
+
+#contrib-rows .contribution input {
+    width:auto;
+}
+
+#contrib-rows .contribution-title input[type=submit] {
+    width:auto;
 }
 
 .wpgp-approved {
