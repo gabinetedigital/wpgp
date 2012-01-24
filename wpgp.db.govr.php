@@ -216,7 +216,7 @@ function wpgp_db_govr_get_contrib_count() {
     return $wpdb->get_var($sql);
 }
 
-function wpgp_db_govr_get_contrib($id, $user_id) {
+function wpgp_db_govr_get_contrib($id, $user_id = null) {
     global $wpdb;
     $sql = $wpdb->prepare("SELECT * FROM ".WPGP_GOVR_CONTRIB_TABLE."
                            WHERE id=%d",array($id));
@@ -347,6 +347,17 @@ function wpgp_db_govr_get_user_stats($user) {
     return array("contribs" => $contribs, "votes" => $votes);
 }
 
+
+function wpgp_db_govr_contrib_answer($id, $answer, $date, $data) {
+    global $wpdb;
+    $wpdb->update(WPGP_GOVR_CONTRIB_TABLE,
+                  array('answer'      => $answer,
+                        'answered_at' => $date,
+                        'data'        => $data,
+                        'status'      => 'responded'
+                  ),
+                  array('id' => $id));
+}
 
 function wpgp_db_govr_get_contribs_count_by_theme($theme_id) {
     global $wpdb;

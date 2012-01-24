@@ -107,6 +107,14 @@
       </a>
     </div>
     {% endif %}
+
+    {% if contrib.status == 'responded' %}
+    <div class="smenu answerlink">
+      <a href="admin.php?page=gov-responde&subpage=answer&contrib_id={{ contrib.id }}">
+        Edit the answer
+      </a>
+    </div>
+    {% endif %}
   </td>
   <td>
     <a href="{{siteurl}}/wp-admin/user-edit.php?user_id={{ contrib.user_id }}">

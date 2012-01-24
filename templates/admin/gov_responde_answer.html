@@ -8,11 +8,13 @@
 
   <h3>Answer form</h3>
   <form method="post" class="form-wrap">
+    <input type="hidden" name="id" value="{{ contrib.id }}">
+    <input type="hidden" name="theme_id" value="{{ contrib.theme_id }}">
     <ul>
       <li class="form-field">
         <label>Content</label>
         <p class="help">The content of the Governor's answer</p>
-        <textarea id="answer" name="answer"></textarea>
+        <textarea id="answer" name="answer">{{ contrib.answer }}</textarea>
       </li>
       <li class="form-field">
         <label>Extra data</label>
@@ -20,10 +22,10 @@
           Useful data for the API consumer (in our case,
           just fill with the video ID)
         </p>
-        <input type="text" name="data">
+        <input type="text" name="data" value="{{ contrib.data }}">
       </li>
       <li>
-        <input type="submit" value="Answer">
+        <input type="button" value="Save" onclick="save()">
       </li>
   </form>
 </div>

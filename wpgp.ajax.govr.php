@@ -89,9 +89,21 @@ function wpgp_ajax_govr_update_contrib() {
     }
 }
 
+
+function wpgp_ajax_govr_contrib_answer() {
+    wpgp_db_govr_contrib_answer(
+        $_POST['data']['id'],
+        $_POST['data']['answer'],
+        $_POST['data']['date'],
+        $_POST['data']['data']);
+    die("ok");
+}
+
+
 add_action('wp_ajax_govr_create_theme', 'wpgp_ajax_govr_create_theme');
 add_action('wp_ajax_govr_delete_theme', 'wpgp_ajax_govr_delete_theme');
 add_action('wp_ajax_govr_create_contrib', 'wpgp_ajax_govr_create_contrib');
 add_action('wp_ajax_govr_delete_contrib', 'wpgp_ajax_govr_delete_contrib');
 add_action('wp_ajax_govr_update_contrib', 'wpgp_ajax_govr_update_contrib');
+add_action('wp_ajax_govr_contrib_answer', 'wpgp_ajax_govr_contrib_answer');
 ?>
