@@ -301,7 +301,8 @@ function wpgp_db_govr_contrib_vote($contrib, $user) {
     $wpdb->query($wpdb->prepare($sql, array($contrib)));
     $wpdb->insert(WPGP_GOVR_USER_VOTES,
                   array("contrib_id" => $contrib,
-                        "user_id" => $user));
+                        "user_id" => $user,
+                        "date" => date("Y-m-d")));
     return wpgp_db_govr_get_contrib_score($contrib);
 }
 
