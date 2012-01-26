@@ -298,9 +298,19 @@ function wpgp_show_gov_escuta() {
         echo $renderer->render('admin/gov_escuta_audience_new.html');
     }
 
+    function show_edit_form() {
+        $renderer = wpgp_renderer();
+        $ctx = array("audience" => wpgp_db_gove_audience_get($_GET['id']),
+                     "edit"     => true);
+        echo $renderer->render('admin/gov_escuta_audience_new.html', $ctx);
+    }
+
     switch($_GET['subpage']) {
     case 'new':
         show_new_form();
+        break;
+    case 'edit':
+        show_edit_form();
         break;
     case 'audiences':
     default:

@@ -25,7 +25,7 @@
         <td>{% if audience.visible %}yes{% else %}no{% endif %}</td>
         <td>{{ audience.date }}</td>
         <td>
-          <a href="{{ pageurl }}&subpage=edit">
+          <a href="{{ pageurl }}&subpage=edit&id={{ audience.id }}">
             {{ audience.title }}
           </a>
         </td>

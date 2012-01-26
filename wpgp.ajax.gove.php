@@ -28,6 +28,21 @@ function wpgp_ajax_gove_audience_new() {
     die('ok');
 }
 
+
+function wpgp_ajax_gove_audience_edit() {
+    wpgp_db_gove_audience_edit(
+        $_POST['data']['id'],
+        $_POST['data']['title'],
+        $_POST['data']['subject'],
+        $_POST['data']['description'],
+        $_POST['data']['date'],
+        $_POST['data']['visible'],
+        $_POST['data']['data']
+    );
+    die('ok');
+}
+
 add_action('wp_ajax_gove_audience_new', 'wpgp_ajax_gove_audience_new');
+add_action('wp_ajax_gove_audience_edit', 'wpgp_ajax_gove_audience_edit');
 
 ?>

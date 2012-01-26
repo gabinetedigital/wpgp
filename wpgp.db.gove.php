@@ -45,7 +45,7 @@ function wpgp_db_gove_audience_edit($id,
                                     $visible,
                                     $data) {
     global $wpdb;
-    $wpdb->insert(WPGP_GOVE_AUDIENCE_TABLE,
+    $wpdb->update(WPGP_GOVE_AUDIENCE_TABLE,
                   array("title"        => $title,
                         "subject"      => $subject,
                         "description"  => $description,
@@ -98,6 +98,14 @@ function wpgp_db_gove_audience_list($sortby='id',
     $count = $wpdb->get_var(
         "SELECT count(id) FROM " . WPGP_GOVE_AUDIENCE_TABLE);
     return array($listing, $count);
+}
+
+
+function wpgp_db_gove_audience_get($id) {
+    global $wpdb;
+    $sql = $wpdb->prepare("SELECT * FROM " . WPGP_GOVE_AUDIENCE_TABLE .
+                          " WHERE id = %d", $id);
+    return $wpdb->get_row($sql, ARRAY_A);
 }
 
 

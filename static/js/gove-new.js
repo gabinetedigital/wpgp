@@ -16,19 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function save() {
+function save(edit) {
     var $ = jQuery;
     var val = function(n) {
         return $('form [name=' + n + ']').val();
     };
+
+    var action = edit && 'gove_audience_edit' || 'gove_audience_new';
 
     slow_operation(function(done) {
         $.ajax({
             url: 'admin-ajax.php',
             type: 'post',
             data: {
-                action:'gove_audience_new',
+                action: action,
                 data: {
+                    id: val('id'),
                     title: val('title'),
                     date: val('date'),
                     visible: val('visible'),
