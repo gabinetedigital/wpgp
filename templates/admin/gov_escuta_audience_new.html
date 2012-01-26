@@ -51,7 +51,18 @@
           </div>
         </div> <!-- Subject and Description -->
 
-        <button class="button">Save Audience</button>
+        <div class="stuffbox">
+          <h3>Data</h3>
+          <div class="inside">
+            <input type="text" name="data" value="{{ audience.data }}">
+            <p>
+              Useful data for the API consumer (in our case, just fill
+              with the video ID)
+            </p>
+          </div>
+        </div>
+
+        <button class="button" onclick="return save()">Save Audience</button>
 
       </div>
     </div>

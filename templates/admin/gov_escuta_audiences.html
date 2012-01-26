@@ -10,15 +10,28 @@
          cellspacing="0">
     <thead>
       <tr>
-        <th style="width:20px"><a href="{{ pageurl }}&sort=id">ID</a></th>
-        <th style="width:40px"><a href="{{ pageurl }}&sort=visible">Visible</a></th>
-        <th style="width:100px"><a href="{{ pageurl }}&sort=date">Date</a></th>
+        <th style="width:20px"><a href="{{ pageurl }}&sortby=id">ID</a></th>
+        <th style="width:40px"><a href="{{ pageurl }}&sortby=visible">Visible</a></th>
+        <th style="width:100px"><a href="{{ pageurl }}&sortby=date">Date</a></th>
         <th style="width:300px">Title</th>
-        <th>Description</th>
+        <th>Subject</th>
       </tr>
     </thead>
 
     <tbody id="audience-rows">
+      {% for audience in listing %}
+      <tr>
+        <td>{{ audience.id }}</td>
+        <td>{% if audience.visible %}yes{% else %}no{% endif %}</td>
+        <td>{{ audience.date }}</td>
+        <td>
+          <a href="{{ pageurl }}&subpage=edit">
+            {{ audience.title }}
+          </a>
+        </td>
+        <td>{{ audience.subject }}</td>
+      </tr>
+      {% endfor %}
     </tbody>
 
     <tfoot>
@@ -27,7 +40,7 @@
         <th classs="manage-column sortable desc" scope="col">Visible</th>
         <th classs="manage-column sortable desc" scope="col">Date</th>
         <th classs="manage-column desc" scope="col">Title</th>
-        <th classs="manage-column desc" scope="col">Description</th>
+        <th classs="manage-column desc" scope="col">Subject</th>
       </tr>
     </tfoot>
 </div>

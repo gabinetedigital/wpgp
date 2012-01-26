@@ -64,6 +64,7 @@ function wpgp_db_gove_audience_list($sortby='id',
 
     /* Deciding the ASC/DESC direction depending on the first char of
      * the $sortby var. If it starts with `-', it will be DESC. */
+    $sortby = empty($sortby) ? 'id' : $sortby;
     $direction = 'ASC';
     if ($sortby[0] === '-') {
         $direction = 'DESC';

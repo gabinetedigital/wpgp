@@ -44,6 +44,7 @@ include_once('wpgp.db.gove.php');
 include_once('wpgp.admin.panel.php');
 include_once('wpgp.ajax.govr.php');
 include_once('wpgp.ajax.govp.php');
+include_once('wpgp.ajax.gove.php');
 include_once('wpgp.xmlrpc.php');
 
 function wpgp_install() {

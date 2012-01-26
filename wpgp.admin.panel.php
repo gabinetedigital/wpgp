@@ -1,5 +1,5 @@
 <?php /* -*- Mode: php; c-basic-offset:4; -*- */
-/* Copyright (C) 2011  Governo do Estado do Rio Grande do Sul
+/* Copyright (C) 2011, 2012  Governo do Estado do Rio Grande do Sul
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -286,8 +286,10 @@ function wpgp_show_gov_escuta() {
         $ctx = array(
             "listing"   => $listing,
             "count"     => $count,
-            "pageurl"   => remove_query_arg("subpage")
         );
+
+        $ctx["pageurl"] = remove_query_arg("subpage");
+        $ctx["pageurl"] = remove_query_arg("sortby");
         echo $renderer->render('admin/gov_escuta_audiences.html', $ctx);
     }
 
