@@ -275,6 +275,39 @@ function wpgp_show_gov_pergunta() {
 }
 
 
+function wpgp_show_gov_escuta() {
+    function show_audiences() {
+        $renderer = wpgp_renderer();
+
+        list($listing, $count) =
+            wpgp_db_gove_audience_list($_GET['sortby'],
+                                       $_GET['search'],
+                                       $_GET['page']);
+        $ctx = array(
+            "listing"   => $listing,
+            "count"     => $count,
+            "pageurl"   => remove_query_arg("subpage")
+        );
+        echo $renderer->render('admin/gov_escuta_audiences.html', $ctx);
+    }
+
+    function show_new_form() {
+        $renderer = wpgp_renderer();
+        echo $renderer->render('admin/gov_escuta_audience_new.html');
+    }
+
+    switch($_GET['subpage']) {
+    case 'new':
+        show_new_form();
+        break;
+    case 'audiences':
+    default:
+        show_audiences();
+        break;
+    }
+}
+
+
 function wpgp_admin_menu() {
     $rootslug = __FILE__;
 
@@ -289,9 +322,13 @@ function wpgp_admin_menu() {
                      'Governador Responde', 'administrator',
                      "gov-responde","wpgp_show_gov_responde");
 
+    $gove = add_submenu_page($rootslug, 'Governo Escuta',
+                     'Governo Escuta', 'administrator',
+                     "gov-escuta","wpgp_show_gov_escuta");
+
 
     /* Loading javascript */
-    add_action('admin_enqueue_scripts', function($hooksufix) use ($govp,$govr){
+    add_action('admin_enqueue_scripts', function($hooksufix) use ($govp, $govr, $gove) {
 
             wp_enqueue_script(
                 'jquery',
@@ -335,6 +372,14 @@ function wpgp_admin_menu() {
                 wp_enqueue_style(
                                  'wpgp-govr-css',
                                  plugins_url('static/css/govr.css', __FILE__));
+                break;
+            case $gove:
+                wp_enqueue_script('wpgp-gove',
+                                  plugins_url("static/js/gove${sufix}.js",
+                                              __FILE__));
+                wp_enqueue_style('wpgp-gove-css',
+                                 plugins_url('static/css/gove.css',
+                                             __FILE__));
                 break;
             }
         });

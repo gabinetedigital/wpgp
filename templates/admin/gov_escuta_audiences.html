@@ -1,0 +1,33 @@
+<div class="wrap">
+  <h2>
+    Audiences
+    <a href="{{ pageurl }}&subpage=new" class="add-new-h2">
+      Add New
+    </a>
+  </h2>
+
+  <table class="wp-list-table widefat fixed audiences"
+         cellspacing="0">
+    <thead>
+      <tr>
+        <th style="width:20px"><a href="{{ pageurl }}&sort=id">ID</a></th>
+        <th style="width:40px"><a href="{{ pageurl }}&sort=visible">Visible</a></th>
+        <th style="width:100px"><a href="{{ pageurl }}&sort=date">Date</a></th>
+        <th style="width:300px">Title</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+
+    <tbody id="audience-rows">
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <th classs="manage-column sortable desc" scope="col">ID</th>
+        <th classs="manage-column sortable desc" scope="col">Visible</th>
+        <th classs="manage-column sortable desc" scope="col">Date</th>
+        <th classs="manage-column desc" scope="col">Title</th>
+        <th classs="manage-column desc" scope="col">Description</th>
+      </tr>
+    </tfoot>
+</div>

@@ -1,0 +1,60 @@
+<div class="wrap">
+  <div id="icon-edit" class="icon32 icon32-posts-post"><br></div>
+  <h2>Add New Audience</h2>
+
+  <form id="audience" method="post" class="form-wrap">
+    <div class="metabox-holder">
+      <div id="poststuff">
+
+        <div class="stuffbox">
+          <h3>Basic data about the audience</h3>
+          <div class="inside">
+            <div class="form-field form-required">
+              <label>Title</label>
+              <input type="text" name="title" value="{{ audience.title }}"
+                     style="width:98%;">
+            </div>
+
+            <div class="form-field form-required">
+              <label>Date</label>
+              <input type="text" name="date" value="{{ audience.date }}"
+                     style="width:98%;">
+            </div>
+
+            <div class="form-field form-required">
+              <input
+                 type="checkbox" name="visible"
+                 style="float:left; margin-right:5px"
+                 {% if visible %}checked="checked"{% endif %}>
+              <label>Visible</label>
+            </div>
+          </div>
+        </div> <!-- Subject and Description -->
+
+        <div class="stuffbox">
+          <h3>More descriptive text</h3>
+          <div class="inside">
+            <div class="form-field form-required">
+              <label>Subject</label>
+              <textarea
+                 name="subject" id="subject"
+                 style="width:98%">{{ audience.subject }}</textarea>
+            </div>
+
+            <div class="form-field form-required">
+              <label>Description</label>
+              <textarea
+                 name="description" id="description"
+                 style="width:98%; height:150px;"
+                 >{{ audience.description }}</textarea>
+            </div>
+          </div>
+        </div> <!-- Subject and Description -->
+
+        <button class="button">Save Audience</button>
+
+      </div>
+    </div>
+  </form>
+
+</div>

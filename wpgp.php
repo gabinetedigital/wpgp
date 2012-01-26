@@ -32,6 +32,7 @@ define('WPGP_GOVP_SESSION_TABLE','wpgp_govp_sessions');
 define('WPGP_GOVP_CONTRIB_TABLE','wpgp_govp_contribs');
 define('WPGP_GOVP_CONTRIBC_TABLE', 'wpgp_govp_contrib_children');
 define('WPGP_GOVP_THEME_TABLE','wpgp_govp_themes');
+define('WPGP_GOVE_AUDIENCE_TABLE', 'wpgp_gove_audiences');
 
 define('WPGP_RESULTS_PER_PAGE', 50);
 
@@ -39,6 +40,7 @@ include_once('wpgp.templating.php');
 include_once('wpgp.util.php');
 include_once('wpgp.db.govr.php');
 include_once('wpgp.db.govp.php');
+include_once('wpgp.db.gove.php');
 include_once('wpgp.admin.panel.php');
 include_once('wpgp.ajax.govr.php');
 include_once('wpgp.ajax.govp.php');
@@ -128,6 +130,19 @@ function wpgp_install() {
       children_id int not null,
       PRIMARY KEY (inverse_id,children_id),
       KEY contrib_children_inverse_fk (children_id)
+    ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+    CREATE TABLE ". WPGP_GOVE_AUDIENCE_TABLE . " (
+      id int NOT NULL AUTO_INCREMENT,
+      title varchar(256) NOT NULL,
+      subject varchar(256),
+      description TEXT,
+      date datetime NOT NULL,
+      created_at datetime,
+      started_at datetime,
+      visible boolean,
+      started boolean,
+      data varchar(256),
+      UNIQUE KEY id (id)
     ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
 
     error_log($sql);
