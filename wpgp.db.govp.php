@@ -108,7 +108,7 @@ function wpgp_db_govp_get_session_contribs($session_id,
                                            $to = null,
                                            $s = null,
                                            $filter = null,
-                                           $perpage = WPGP_CONTRIBS_PER_PAGE) {
+                                           $perpage = WPGP_RESULTS_PER_PAGE) {
     global $wpdb;
     $offset = $page * $perpage;
     $sortfields = array(
@@ -341,7 +341,7 @@ function wpgp_govp_contrib_get_children($contrib) {
 
 function wpgp_db_govp_contribs_scores($session_id,
                                       $page,
-                                      $perpage = WPGP_CONTRIBS_PER_PAGE) {
+                                      $perpage = WPGP_RESULTS_PER_PAGE) {
     global $wpdb;
     $offset = $page * $perpage;
 
@@ -372,7 +372,7 @@ function wpgp_db_govp_contribs_scores($session_id,
 
 function wpgp_db_govp_contribs_theme_scores($theme_id,
                                             $page,
-                                            $perpage = WPGP_CONTRIBS_PER_PAGE) {
+                                            $perpage = WPGP_RESULTS_PER_PAGE) {
   global $wpdb;
   $offset = $page * $perpage;
 

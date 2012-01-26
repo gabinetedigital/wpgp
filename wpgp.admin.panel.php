@@ -64,8 +64,8 @@ function wpgp_show_gov_responde() {
         $ctx['siteurl'] = get_bloginfo('siteurl');
         $ctx['sortby'] = get_query_var("sort");
         $ctx['paged'] =  $page;
-        $ctx['numpages'] = ceil($ctx['count'] / WPGP_CONTRIBS_PER_PAGE);
-        $ctx['perpage'] = WPGP_CONTRIBS_PER_PAGE;
+        $ctx['numpages'] = ceil($ctx['count'] / WPGP_RESULTS_PER_PAGE);
+        $ctx['perpage'] = WPGP_RESULTS_PER_PAGE;
         $ctx['pageurl'] = remove_query_arg("sort");
         $ctx['pageurl'] = remove_query_arg("paged");
         echo $renderer->render('admin/gov_responde_contribs.html', $ctx);
@@ -85,8 +85,8 @@ function wpgp_show_gov_responde() {
 
         $ctx['siteurl'] = get_bloginfo('siteurl');
         $ctx['paged'] =  $page;
-        $ctx['numpages'] = ceil($ctx['count'] / WPGP_CONTRIBS_PER_PAGE);
-        $ctx['perpage'] = WPGP_CONTRIBS_PER_PAGE;
+        $ctx['numpages'] = ceil($ctx['count'] / WPGP_RESULTS_PER_PAGE);
+        $ctx['perpage'] = WPGP_RESULTS_PER_PAGE;
         $ctx['pageurl'] = remove_query_arg("paged");
         echo $renderer->render('admin/gov_responde_scores.html', $ctx);
     }
@@ -171,8 +171,8 @@ function wpgp_show_gov_pergunta() {
         $ctx['siteurl'] = get_bloginfo('siteurl');
         $ctx['sortby'] = get_query_var("sort");
         $ctx['paged'] =  $page;
-        $ctx['numpages'] = ceil($ctx['count'] / WPGP_CONTRIBS_PER_PAGE);
-        $ctx['perpage'] = WPGP_CONTRIBS_PER_PAGE;
+        $ctx['numpages'] = ceil($ctx['count'] / WPGP_RESULTS_PER_PAGE);
+        $ctx['perpage'] = WPGP_RESULTS_PER_PAGE;
         $ctx['pageurl'] = remove_query_arg("sort");
         $ctx['pageurl'] = remove_query_arg("paged");
         echo $renderer->render('admin/gov_pergunta_contribs.html', $ctx);
@@ -191,8 +191,8 @@ function wpgp_show_gov_pergunta() {
 
         $ctx['siteurl'] = get_bloginfo('siteurl');
         $ctx['paged'] =  $page;
-        $ctx['numpages'] = ceil($ctx['count'] / WPGP_CONTRIBS_PER_PAGE);
-        $ctx['perpage'] = WPGP_CONTRIBS_PER_PAGE;
+        $ctx['numpages'] = ceil($ctx['count'] / WPGP_RESULTS_PER_PAGE);
+        $ctx['perpage'] = WPGP_RESULTS_PER_PAGE;
         $ctx['pageurl'] = remove_query_arg("paged");
         echo $renderer->render('admin/gov_pergunta_scores.html', $ctx);
     }
@@ -222,8 +222,8 @@ function wpgp_show_gov_pergunta() {
 
         $ctx['siteurl'] = get_bloginfo('siteurl');
         $ctx['paged'] =  $page;
-        $ctx['numpages'] = ceil($ctx['count'] / WPGP_CONTRIBS_PER_PAGE);
-        $ctx['perpage'] = WPGP_CONTRIBS_PER_PAGE;
+        $ctx['numpages'] = ceil($ctx['count'] / WPGP_RESULTS_PER_PAGE);
+        $ctx['perpage'] = WPGP_RESULTS_PER_PAGE;
         $ctx['pageurl'] = remove_query_arg("paged");
         echo $renderer->render('admin/gov_pergunta_theme_scores.html',
                                $ctx);

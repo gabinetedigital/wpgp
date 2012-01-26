@@ -33,7 +33,7 @@ define('WPGP_GOVP_CONTRIB_TABLE','wpgp_govp_contribs');
 define('WPGP_GOVP_CONTRIBC_TABLE', 'wpgp_govp_contrib_children');
 define('WPGP_GOVP_THEME_TABLE','wpgp_govp_themes');
 
-define('WPGP_CONTRIBS_PER_PAGE', 50);
+define('WPGP_RESULTS_PER_PAGE', 50);
 
 include_once('wpgp.templating.php');
 include_once('wpgp.util.php');

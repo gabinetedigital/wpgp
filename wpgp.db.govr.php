@@ -75,7 +75,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
                                    $to = null,
                                    $status = '',
                                    $filter = null,
-                                   $perpage = WPGP_CONTRIBS_PER_PAGE) {
+                                   $perpage = WPGP_RESULTS_PER_PAGE) {
     global $wpdb;
     $offset = $page * $perpage;
     $sortfields = array('id' => 'contrib.id' ,
@@ -167,7 +167,7 @@ function wpgp_db_govr_get_theme_contribs($theme_id,
                                          $to = null,
                                          $status = 0,
                                          $filter = null,
-                                         $perpage = WPGP_CONTRIBS_PER_PAGE) {
+                                         $perpage = WPGP_RESULTS_PER_PAGE) {
 
     return wpgp_db_govr_get_contribs(
         $theme_id, $user_id, $page, $sortby, $from, $to,
@@ -191,7 +191,7 @@ function wpgp_db_govr_get_voting_contribs($theme_id = null,
                                           $sortby,
                                           $from = null,
                                           $to = null,
-                                          $perpage = WPGP_CONTRIBS_PER_PAGE) {
+                                          $perpage = WPGP_RESULTS_PER_PAGE) {
     $status = 'approved';
     $filter = " AND contrib.parent = 0 AND (
         NOT EXISTS (SELECT 1
@@ -537,7 +537,7 @@ function wpgp_db_govr_contribs_scores($theme_id,
                                       $page,
                                       $from,
                                       $to,
-                                      $perpage = WPGP_CONTRIBS_PER_PAGE) {
+                                      $perpage = WPGP_RESULTS_PER_PAGE) {
     global $wpdb;
     $offset = $page * $perpage;
 
