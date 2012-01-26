@@ -312,7 +312,7 @@ function wpgp_db_govr_contrib_vote($contrib, $user) {
     $wpdb->insert(WPGP_GOVR_USER_VOTES,
                   array("contrib_id" => $contrib,
                         "user_id" => $user,
-                        "date" => date("Y-m-d")));
+                        "date" => date("Y-m-d H:i:s")));
     return wpgp_db_govr_get_contrib_score($contrib);
 }
 
