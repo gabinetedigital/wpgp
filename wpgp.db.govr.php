@@ -85,6 +85,16 @@ function wpgp_db_govr_get_contribs($theme_id = null,
                         'title' => 'contrib.title',
                         'score' => 'contrib.score'
                         );
+
+    /* Deciding the ASC/DESC direction depending on the first char of
+     * the $sortby var. If it starts with `-', it will be DESC. */
+    $direction = 'ASC';
+    if ($sortby[0] === '-') {
+        $direction = 'DESC';
+        $sortby = substr($sortby, 1, strlen($sortby));
+    }
+
+    /* Here we define which field will be used to sort the query */
     if (isset($sortfields[$sortby])) {
         $sortfield = $sortfields[$sortby];
     } else {
@@ -112,7 +122,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
                    contrib.user_id = user.ID AND
                    contrib.deleted = 0)
                    $fromto $statusfilter $filter
-                   ORDER BY $sortfield",
+                   ORDER BY $sortfield $direction",
             array($theme_id));
     } else {
         $sql_base = "
@@ -121,7 +131,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
             WHERE (contrib.user_id = user.ID AND
                    contrib.deleted = 0)
                    $fromto $statusfilter $filter
-                   ORDER BY $sortfield";
+                   ORDER BY $sortfield $direction";
     }
 
     /* Finish building the select and execute it */
