@@ -31,10 +31,10 @@
 
             <div class="form-field form-required">
               <input
-                 type="checkbox" name="visible"
+                 id="visible" name="visible" type="checkbox"
                  style="float:left; margin-right:5px"
-                 {% if visible %}checked="checked"{% endif %}>
-              <label>Visible</label>
+                 {% if audience.visible %}checked="checked"{% endif %}>
+              <label for="visible">Visible</label>
             </div>
           </div>
         </div> <!-- Subject and Description -->
@@ -70,8 +70,9 @@
           </div>
         </div>
 
-        <button class="button" onclick="return save({{ edit }})">Save Audience</button>
-
+        <button class="button" onclick="return save({{ edit }})">
+          Save Audience
+        </button>
       </div>
     </div>
   </form>

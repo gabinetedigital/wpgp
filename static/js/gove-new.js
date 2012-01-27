@@ -34,7 +34,7 @@ function save(edit) {
                     id: val('id'),
                     title: val('title'),
                     date: val('date'),
-                    visible: val('visible'),
+                    visible: $('form [name=visible]').attr('checked'),
                     subject: val('subject'),
                     description: val('description'),
                     data: val('data')
