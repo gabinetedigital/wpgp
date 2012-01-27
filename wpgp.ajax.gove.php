@@ -42,7 +42,17 @@ function wpgp_ajax_gove_audience_edit() {
     die('ok');
 }
 
+
+function wpgp_ajax_gove_audience_remove() {
+    wpgp_db_gove_audience_remove(
+        $_POST['data']['id']
+    );
+    die('ok');
+}
+
+
 add_action('wp_ajax_gove_audience_new', 'wpgp_ajax_gove_audience_new');
 add_action('wp_ajax_gove_audience_edit', 'wpgp_ajax_gove_audience_edit');
+add_action('wp_ajax_gove_audience_remove', 'wpgp_ajax_gove_audience_remove');
 
 ?>

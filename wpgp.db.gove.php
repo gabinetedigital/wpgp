@@ -109,7 +109,11 @@ function wpgp_db_gove_audience_get($id) {
 }
 
 
-function wpgp_db_gove_audience_remove() {
+function wpgp_db_gove_audience_remove($id) {
+    global $wpdb;
+    $sql = $wpdb->prepare("DELETE FROM " . WPGP_GOVE_AUDIENCE_TABLE .
+                          " WHERE id = %d", $id);
+    $wpdb->query($sql);
 }
 
 ?>

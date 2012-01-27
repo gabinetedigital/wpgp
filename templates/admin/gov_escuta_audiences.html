@@ -21,13 +21,22 @@
     <tbody id="audience-rows">
       {% for audience in listing %}
       <tr>
-        <td>{{ audience.id }}</td>
+        <td>
+          <strong>#{{ audience.id }}</strong>
+        </td>
         <td>{% if audience.visible %}yes{% else %}no{% endif %}</td>
         <td>{{ audience.date }}</td>
         <td>
           <a href="{{ pageurl }}&subpage=edit&id={{ audience.id }}">
-            {{ audience.title }}
+            <strong>{{ audience.title }}</strong>
           </a>
+          <div class="row-actions">
+            <span class="trash">
+              <a href="javascript:;" onclick="return remove({{ audience.id }});">
+                Remove
+              </a>
+            </span>
+          </div>
         </td>
         <td>{{ audience.subject }}</td>
       </tr>
