@@ -21,7 +21,7 @@ function wpgp_ajax_gove_audience_new() {
         $_POST['data']['subject'],
         $_POST['data']['description'],
         $_POST['data']['date'],
-        $_POST['data']['visible'],
+        $_POST['data']['visible'] === 'checked',
         $_POST['data']['data'],
         date("Y-m-d H:i:s")
     );
