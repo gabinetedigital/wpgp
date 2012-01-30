@@ -58,6 +58,7 @@ function wpgp_db_gove_audience_edit($id,
 
 function wpgp_db_gove_audience_list($sortby='id',
                                     $search='',
+                                    $filter='true',
                                     $page=0,
                                     $perpage=WPGP_RESULTS_PER_PAGE) {
     global $wpdb;
@@ -89,7 +90,7 @@ function wpgp_db_gove_audience_list($sortby='id',
         " FROM " . WPGP_GOVE_AUDIENCE_TABLE .
         " audience ";
     $sql = $wpdb->prepare(
-        "$sql WHERE $textsearch $sortby LIMIT %d, %d",
+        "$sql WHERE $textsearch AND ($filter) $sortby LIMIT %d, %d",
         array($offset, $perpage));
     $listing = $wpdb->get_results($sql, ARRAY_A);
 

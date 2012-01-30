@@ -141,6 +141,20 @@ function wpgp_govr_getUserStats($args) {
 }
 
 
+function wpgp_gove_getAudiences($args) {
+    if (!is_array($args = _exapi_method_header($args))) {
+        return $args;
+    }
+    return wpgp_db_gove_audience_list(
+        $args[1], /* sortby */
+        $args[2], /* search */
+        $args[3], /* filter */
+        $args[4], /* page */
+        $args[5] ? $args[5] : WPGP_RESULTS_PER_PAGE /* perpage */
+    );
+}
+
+
 /* Filter that registers our methods in the wordpress xmlrpc provider */
 add_filter('xmlrpc_methods', function ($methods) {
     $methods['govr.getTheme'] = 'wpgp_govr_getTheme';
@@ -155,6 +169,8 @@ add_filter('xmlrpc_methods', function ($methods) {
     $methods['govr.getContribScore'] = 'wpgp_govr_getContribScore';
     $methods['govr.contribIsAggregated'] = 'wpgp_govr_contribIsAggregated';
     $methods['govr.getUserStats'] = 'wpgp_govr_getUserStats';
+
+    $methods['gove.getAudiences'] = 'wpgp_gove_getAudiences';
     return $methods;
 });
 
