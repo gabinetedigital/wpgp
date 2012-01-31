@@ -83,6 +83,11 @@ function wpgp_db_gove_audience_list($sortby='id',
             " description LIKE '%$search%)";
     }
 
+    /* Just making sure that filter will not be empty */
+    if (empty($filter)) {
+        $filter = 'true';
+    }
+
     /* The query itself, we just concatenate all details of the query
      * built above. */
     $offset = $page * $perpage;

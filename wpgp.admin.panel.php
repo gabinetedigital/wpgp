@@ -282,6 +282,7 @@ function wpgp_show_gov_escuta() {
         list($listing, $count) =
             wpgp_db_gove_audience_list($_GET['sortby'],
                                        $_GET['search'],
+                                       $_GET['filter'],
                                        $_GET['page']);
         $ctx = array(
             "listing"   => $listing,
