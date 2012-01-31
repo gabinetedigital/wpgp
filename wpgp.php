@@ -19,7 +19,7 @@
 Plugin Name: WpGP
 Plugin URI: http://trac.gabinetedigital.rs.gov.br
 Description: Wordpress Government Participation Plugin
-Version: 0.1.0
+Version: 0.2.0
 Author URI: http://gabinetedigital.rs.gov.br
 License: AGPL3
 */
