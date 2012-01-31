@@ -12,9 +12,8 @@
       <tr>
         <th style="width:20px"><a href="{{ pageurl }}&sortby=id">ID</a></th>
         <th style="width:40px"><a href="{{ pageurl }}&sortby=visible">Visible</a></th>
-        <th style="width:100px"><a href="{{ pageurl }}&sortby=date">Date</a></th>
-        <th style="width:220px">Title</th>
-        <th>Subject</th>
+        <th>Title</th>
+        <th style="width:140px"><a href="{{ pageurl }}&sortby=date">Date</a></th>
       </tr>
     </thead>
 
@@ -25,7 +24,6 @@
           <strong>#{{ audience.id }}</strong>
         </td>
         <td>{% if audience.visible %}yes{% else %}no{% endif %}</td>
-        <td>{{ audience.date }}</td>
         <td>
           <a href="{{ pageurl }}&subpage=edit&id={{ audience.id }}">
             <strong>{{ audience.title }}</strong>
@@ -38,7 +36,10 @@
             </span>
           </div>
         </td>
-        <td>{{ audience.subject }}</td>
+        <td>
+          {{ audience.date|date("d/m/Y") }} &mdash;
+          {{ audience.date|date("H:i") }}h
+        </td>
       </tr>
       {% endfor %}
     </tbody>
@@ -47,9 +48,8 @@
       <tr>
         <th classs="manage-column sortable desc" scope="col">ID</th>
         <th classs="manage-column sortable desc" scope="col">Visible</th>
-        <th classs="manage-column sortable desc" scope="col">Date</th>
         <th classs="manage-column desc" scope="col">Title</th>
-        <th classs="manage-column desc" scope="col">Subject</th>
+        <th classs="manage-column sortable desc" scope="col">Date</th>
       </tr>
     </tfoot>
 </div>
