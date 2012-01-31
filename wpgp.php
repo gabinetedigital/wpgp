@@ -135,7 +135,7 @@ function wpgp_install() {
     CREATE TABLE ". WPGP_GOVE_AUDIENCE_TABLE . " (
       id int NOT NULL AUTO_INCREMENT,
       title varchar(256) NOT NULL,
-      subject varchar(256),
+      subject TEXT,
       description TEXT,
       date datetime NOT NULL,
       created_at datetime,
