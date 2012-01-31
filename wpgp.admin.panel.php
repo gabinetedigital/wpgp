@@ -279,8 +279,14 @@ function wpgp_show_gov_escuta() {
     function show_audiences() {
         $renderer = wpgp_renderer();
 
+        /* -- Default sort field -- */
+        $sortby = $_GET['sortby'];
+        if (empty($sortby)) {
+            $sortby = '-date';
+        }
+
         list($listing, $count) =
-            wpgp_db_gove_audience_list($_GET['sortby'],
+            wpgp_db_gove_audience_list($sortby,
                                        $_GET['search'],
                                        $_GET['filter'],
                                        $_GET['page']);
