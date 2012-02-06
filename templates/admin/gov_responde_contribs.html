@@ -1,51 +1,79 @@
 {% import "admin/govr.part.row.html" as rows %}
 <div class="wrap">
+  <div class="stats">
+    {{ count }} contribs, {{ scores }} votes.
+  </div>
 
   <h2>
-    Contributions [{{theme.name}}]
+    Contributions ({{ theme.name }})
     <a href="" class="add-new-h2">Add New</a>
   </h2>
 
-  Resultado: {{count}} contribuições, {{scores}} votos.
+  <div class="wpgp-new-contrib stuffbox" style="display:none">
+    <form class="form-wrap">
+      <div class="form-field">
+        <label for="title">Title</label>
+        <input type="text" name="title" style="width:518px">
+      </div>
+      <div class="form-field">
+        <label for="content">Content</label>
+        <textarea name="content" style="width:518px;height:120px"
+                  maxlength="600"> </textarea>
+      </div>
+      <div class="form-field">
+        <label for="part">Part of</label>
+        <input type="text" name="part" style="width:518px">
+      </div>
+      <input type="button" name="OK" class="button" value="OK">
+      <input type="button" name="Cancel" class=" button" value="Cancel">
+    </form>
+  </div>
 
-  <form
-     id="search" method="get" action="{{ pageurl }}"
-     onsubmit="window.location.href+='&s='+document.forms.search.s.value; return false">
-    <p class="search-box">
-      <label class="screen-reader-text" for="search-input">
-        Search Contributions:
-      </label>
-      <input type="text" id="search_input" name="s" value="{{ s }}">
-      <input
-         type="submit" name="" id="search-submit" class="button"
-         value="Search">
-    </p>
-  </form>
+  <div id="poststuff" class="stuffbox">
+    <h3>Search</h3>
+    <div class="inside">
+      <form
+         style="float:right;"
+         id="search" method="get" action="{{ pageurl }}"
+         onsubmit="window.location.href+='&s='+document.forms.search.s.value; return false">         <label class="screen-reader-text" for="search-input">
+          Search Contributions:
+        </label>
+        <input
+           placeholder="Term" type="text"
+           id="search_input" name="s" value="{{ s }}">
+        <input
+           type="submit" name="" id="search-submit" class="button"
+           value="Search">
+      </form>
 
-  <form id="fromto" action="{{ pageurl }}"
-     onsubmit="window.location.href+='&from='+document.forms.fromto.from.value+'&to='+document.forms.fromto.to.value; return false">
-    <p class="search-box">
-      <label class="screen-reader-text" for="from">
-        From:
-      </label>
-      <input type="text" id="from" name="from">
-      <label class="screen-reader-text" for="to">
-        To:
-      </label>
-      <input type="text" id="to" name="to">
-      <input
-         type="submit" name="" id="search-submit" class="button"
-         value="Filter date">
-        <input type="reset" class="button" value="Clear">
-    </p>
+      <form id="fromto" action="{{ pageurl }}"
+            onsubmit="window.location.href+='&from='+document.forms.fromto.from.value+'&to='+document.forms.fromto.to.value; return false">
+        <p>
+          <label class="screen-reader-text" for="from">
+            From:
+          </label>
+          <input
+             class="date" type="text" id="from"
+             name="from" placeholder="From">
+          <label class="screen-reader-text" for="to">
+            To:
+          </label>
+          <input
+             class="date" type="text" id="to" name="to"
+             placeholder="To">
+          <input
+             type="submit" name="" id="search-submit" class="button"
+             value="Filter date">
+          <input type="reset" class="button" value="Clear">
+        </p>
 
-    <script>
-      jQuery("#from").datepicker({ dateFormat: 'dd/mm/yy' });
-      jQuery("#to").datepicker({ dateFormat: 'dd/mm/yy' });
-      document.forms.fromto.from.value = '{{ from }}';
-      document.forms.fromto.to.value = '{{ to }}';
-    </script>
-  </form>
+        <script>
+          document.forms.fromto.from.value = '{{ from }}';
+          document.forms.fromto.to.value = '{{ to }}';
+        </script>
+      </form>
+    </div>
+  </div>
 
   <div class="tablenav top">
     <div class="alignright actions">
@@ -67,26 +95,6 @@
         {% endif %}
       </label>
     </div>
-  </div>
-
-  <div class="wpgp-new-contrib stuffbox" style="display:none">
-    <form class="form-wrap">
-      <div class="form-field">
-        <label for="title">Title</label>
-        <input type="text" name="title" style="width:518px">
-      </div>
-      <div class="form-field">
-        <label for="content">Content</label>
-        <textarea name="content" style="width:500px;height:200px"
-                  maxlength="600"> </textarea>
-      </div>
-      <div class="form-field">
-        <label for="part">Part of</label>
-        <input type="text" name="part" style="width:518px">
-      </div>
-      <input type="button" name="OK" class="button" value="OK">
-      <input type="button" name="Cancel" class=" button" value="Cancel">
-    </form>
   </div>
 
   <div class="wpgp-status-bar">loading...</div>

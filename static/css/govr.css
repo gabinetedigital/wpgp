@@ -3,6 +3,10 @@ div.stats {
     padding:10px 0;
 }
 
+.date {
+    width:90px;
+}
+
 td.contribution div { font-size:x-small; color:#666; }
 td.contribution:hover .smenu { visibility:visible; }
 

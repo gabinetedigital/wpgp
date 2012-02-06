@@ -285,6 +285,9 @@ jQuery(function() {
 
   $(".wp-list-table").show();
   $(".wp-list-table-loading").hide();
+
+  /* Datepics */
+  $('.date').datepicker({ dateForrmat: 'dd/mm/yy' });
 });
 
 function do_fromto() {
