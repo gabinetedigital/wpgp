@@ -5,7 +5,8 @@
   </div>
 
   <h2>
-    Contributions ({{ theme.name }})
+    Contributions
+    {% if theme %} ({{ theme.name }}) {% endif %}
     <a href="" class="add-new-h2">Add New</a>
   </h2>
 
@@ -103,7 +104,7 @@
          cellspacing="0">
     <thead>
       <tr>
-        <th style="width:3%"><a href="{{pageurl}}&sort=id">ID</a></th>
+        <th style="width:40px"><a href="{{pageurl}}&sort=id">ID</a></th>
         <th style="width:8%"><a href="{{pageurl}}&sort=status">Status</a></th>
         <th style="width:8%"><a href="{{pageurl}}&sort=theme">Theme</a></th>
         <th style="width:15%"><a href="{{pageurl}}&sort=title">Title</a></th>

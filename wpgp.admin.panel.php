@@ -21,6 +21,7 @@ function wpgp_show_gov_responde() {
         $renderer = wpgp_renderer();
         $ctx = array();
         $ctx['listing'] = wpgp_db_govr_get_themes();
+        $ctx['pageurl'] = remove_query_arg("subpage");
 
         $summary = wpgp_db_govr_get_summary($_GET['from'], $_GET['to']);
 

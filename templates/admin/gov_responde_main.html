@@ -11,47 +11,59 @@
        class="add-new-h2">Add New</a>
   </h2>
 
-  <div class="metabox-holder wpgp-new-theme" style="display:none">
-    <div class="wpgp-new-theme stuffbox">
-      <h3>New Theme</h3>
-      <form class="form-wrap">
-        <div class="form-field">
-          <label for="title">Title</label>
-          <input type="text" name="title" width="50%">
-        </div>
+  <div id="poststuff">
+    <div class="metabox-holder wpgp-new-theme" style="display:none">
+      <div class="wpgp-new-theme stuffbox">
+        <h3>New Theme</h3>
+        <form class="form-wrap">
+          <div class="form-field">
+            <label for="title">Title</label>
+            <input type="text" name="title" width="50%">
+          </div>
 
-        <div style="margin-top:-10px; padding:0 0 10px 10px;">
-          <input type="button" name="OK" class="button" value="OK">
-          <input type="button" name="Cancel" class=" button" value="Cancel">
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div id="poststuff" class="stuffbox">
-    <h3>Search</h3>
-    <div class="inside">
-      <form id="fromto" action="{{ pageurl }}"
-            onsubmit="window.location.href+='&from='+document.forms.fromto.from.value+'&to='+document.forms.fromto.to.value; return false">
-        <label class="screen-reader-text" for="from">
-          From:
-        </label>
-        <input class="date" type="text" id="from" name="from" placeholder="From">
-        <label class="screen-reader-text" for="to">
-          To:
-        </label>
-        <input class="date" type="text" id="to" name="to" placeholder="To">
-        <input
-           type="submit" name="" id="search-submit" class="button"
-           value="Filter date">
-        <input type="reset" class="button" value="Clear">
-        <script>
-          document.forms.fromto.from.value = '{{ from }}';
-          document.forms.fromto.to.value = '{{ to }}';
-        </script>
-      </form>
+          <div style="margin-top:-10px; padding:0 0 10px 10px;">
+            <input type="button" name="OK" class="button" value="OK">
+            <input type="button" name="Cancel" class=" button" value="Cancel">
+          </div>
+        </form>
+      </div>
     </div>
 
+    <div class="stuffbox">
+      <h3>Search</h3>
+      <div class="inside">
+        <form id="fromto" action="{{ pageurl }}"
+              onsubmit="window.location.href+='&from='+document.forms.fromto.from.value+'&to='+document.forms.fromto.to.value; return false">
+          <label class="screen-reader-text" for="from">
+            From:
+          </label>
+          <input class="date" type="text" id="from" name="from" placeholder="From">
+          <label class="screen-reader-text" for="to">
+            To:
+          </label>
+          <input class="date" type="text" id="to" name="to" placeholder="To">
+          <input
+             type="submit" name="" id="search-submit" class="button"
+             value="Filter date">
+          <input type="reset" class="button" value="Clear">
+          <script>
+            document.forms.fromto.from.value = '{{ from }}';
+            document.forms.fromto.to.value = '{{ to }}';
+          </script>
+        </form>
+      </div>
+    </div>
+
+    <div class="stuffbox">
+      <h3>Approval required</h3>
+      <div class="inside">
+        You have some contribs to approve.
+
+        <a href="{{ pageurl }}&subpage=contributions&status=pending&sort=-date">
+          Click here and see them all!
+        </a>
+      </div>
+    </div>
   </div>
 
   <table class="wp-list-table widefat audiences fixed"
