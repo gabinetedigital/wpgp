@@ -84,4 +84,7 @@ jQuery(function () {
     window.location.href = window.location.href
       + "&subpage=stats&theme_id="+$(this).attr("name");
   });
+
+  /* Datepics */
+  $('.date').datepicker({ dateForrmat: 'dd/mm/yy' });
 });
