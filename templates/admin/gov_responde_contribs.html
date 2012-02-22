@@ -118,7 +118,7 @@
     </thead>
     <tbody id="contrib-rows">
       {% for contrib in listing %}
-        {{ rows.row(contrib, theme, themes) }}
+        {{ rows.row(contrib, theme, themes, null, _context) }}
       {% endfor %}
     </tbody>
 

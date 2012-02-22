@@ -1,4 +1,4 @@
-{% macro row(contrib, theme, themes, klass) %}
+{% macro row(contrib, theme, themes, klass, ctx) %}
 
 <tr class="{{ exec("wpgp__govr_get_class", contrib) }} {{ klass }}" id="row-{{ contrib.id }}">
 
@@ -117,7 +117,7 @@
     {% endif %}
   </td>
   <td>
-    <a href="{{siteurl}}/wp-admin/user-edit.php?user_id={{ contrib.user_id }}">
+    <a href="{{ ctx.adminurl }}user-edit.php?user_id={{ contrib.user_id }}">
       {{ contrib.display_name }}
     </a>
   </td>

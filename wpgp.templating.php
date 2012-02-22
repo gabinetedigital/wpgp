@@ -62,9 +62,20 @@ class WpGpTemplatingRenderer {
         $this->twig->addExtension(new Wpgp_Twig_Extension_exec);
     }
 
+    /**
+     * Default context for all views rendered by this class.
+     */
+    public function defaultContext() {
+        $ctx = array();
+        $ctx['adminurl'] = get_admin_url();
+        $ctx['siteurl'] = get_bloginfo('siteurl');
+        return $ctx;
+    }
+
     public function render($templateName, $context=array()) {
         $template = $this->twig->loadTemplate($templateName);
-        return $template->render($context);
+        $ctx = array_merge($this->defaultContext(), $context);
+        return $template->render($ctx);
     }
 }
 
