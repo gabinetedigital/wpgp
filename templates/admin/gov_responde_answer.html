@@ -1,7 +1,7 @@
 <div class="wrap answer">
   <h2>Answer the question #{{ contrib.id }}</h2>
   <h3 class="title">{{ contrib.title }}</h3>
-  <em class="date">{{ contrib.created_at|date }}</em>
+  <em class="date">{{ contrib.created_at }}</em>
   <p class="content">{{ contrib.content }}</p>
 
   <hr>
@@ -15,6 +15,13 @@
         <label>Content</label>
         <p class="help">The content of the Governor's answer</p>
         <textarea id="answer" name="answer">{{ contrib.answer }}</textarea>
+      </li>
+      <li class="form-field">
+        <label>Date</label>
+        <p class="help">The date when question was answered</p>
+        <input
+           type="text" name="answered_at" class="date"
+           value="{{ contrib.answered_at }}">
       </li>
       <li class="form-field">
         <label>Extra data</label>

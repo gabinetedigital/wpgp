@@ -15,6 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+/**
+ * Small hammer to convert a date string into an us formatted
+ * date. Currently, the input format is the brazillian one d/m/YY, but
+ * if you want help to improve it, please make a configurable system and
+ * help us to change all hardcoded dates in the code :)
+ */
+function wpgp__date_to_us($input) {
+    return preg_replace('/(\d+)\/(\d+)\/(\d+)/','${3}-${2}-${1}', $input);
+}
+
+
+/**
+ * Does exactly the contrary of the above function. Transforms a date
+ * string from the us format to the "current one".
+ */
+function wpgp__date_from_us($input) {
+    return preg_replace('/(\d+)\-(\d+)\-(\d+).*/','${3}/${2}/${1}', $input);
+}
+
+
 /**
  * Govr Helper function to get the proper css class of a contribution row
  */

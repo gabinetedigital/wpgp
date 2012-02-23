@@ -232,6 +232,10 @@ function wpgp_db_govr_get_contrib($id, $user_id = null) {
                            WHERE id=%d",array($id));
     $c = $wpdb->get_row($sql, ARRAY_A);
 
+    /* Converting some date values */
+    $c['answered_at'] = wpgp__date_from_us($c['answered_at']);
+    $c['created_at'] = wpgp__date_from_us($c['created_at']);
+
     /* Filling out some fields not returned by the following select */
     $c["real_score"] = wpgp_db_govr_get_contrib_score($c["id"]);
     $c["aggregated"] = wpgp_db_govr_get_aggregated_contribs($c["id"]);
@@ -363,7 +367,7 @@ function wpgp_db_govr_contrib_answer($id, $answer, $date, $data) {
     global $wpdb;
     $wpdb->update(WPGP_GOVR_CONTRIB_TABLE,
                   array('answer'      => $answer,
-                        'answered_at' => $date,
+                        'answered_at' => wpgp__date_to_us($date),
                         'data'        => $data,
                         'status'      => 'responded'
                   ),

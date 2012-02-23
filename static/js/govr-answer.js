@@ -22,8 +22,6 @@ function save() {
         return $('form [name=' + n + ']').val();
     };
 
-    var date = (new Date()).toISOString().split('T')[0];
-
     slow_operation(function(done) {
         $.ajax({
             url: 'admin-ajax.php',
@@ -33,7 +31,7 @@ function save() {
                 data: {
                     id: val('id'),
                     answer: val('answer'),
-                    date: date,
+                    date: val('answered_at'),
                     data: val('data')
                 }
             },
@@ -48,3 +46,10 @@ function save() {
         });
     });
 }
+
+jQuery(function () {
+  var $ = jQuery;
+
+  /* Datepics */
+  $('.date').datepicker({ dateForrmat: 'dd/mm/yy' });
+});
