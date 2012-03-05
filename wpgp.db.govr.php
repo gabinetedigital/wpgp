@@ -81,6 +81,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
     $sortfields = array('id' => 'contrib.id' ,
                         'status' => 'contrib.status',
                         'date'  => 'contrib.created_at',
+                        'answerdate' => 'contrib.answered_at',
                         'author' => 'user.display_name',
                         'title' => 'contrib.title',
                         'score' => 'contrib.score'
