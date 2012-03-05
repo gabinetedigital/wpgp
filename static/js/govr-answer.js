@@ -31,6 +31,7 @@ function save() {
                 data: {
                     id: val('id'),
                     answer: val('answer'),
+                    category: val('category'),
                     date: val('answered_at'),
                     data: val('data')
                 }

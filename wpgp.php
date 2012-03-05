@@ -65,6 +65,7 @@ function wpgp_install() {
     CREATE TABLE " . WPGP_GOVR_CONTRIB_TABLE . " (
       id int NOT NULL AUTO_INCREMENT,
       title varchar(256) NOT NULL,
+      category varchar(256) NOT NULL,
       theme_id int NOT NULL,
       content text NOT NULL,
       user_id int(11) NOT NULL,

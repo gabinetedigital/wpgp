@@ -363,10 +363,11 @@ function wpgp_db_govr_get_user_stats($user) {
 }
 
 
-function wpgp_db_govr_contrib_answer($id, $answer, $date, $data) {
+function wpgp_db_govr_contrib_answer($id, $answer, $category, $date, $data) {
     global $wpdb;
     $wpdb->update(WPGP_GOVR_CONTRIB_TABLE,
                   array('answer'      => $answer,
+                        'category'    => $category,
                         'answered_at' => wpgp__date_to_us($date),
                         'data'        => $data,
                         'status'      => 'responded'

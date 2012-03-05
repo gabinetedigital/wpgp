@@ -24,6 +24,14 @@
            value="{{ contrib.answered_at }}">
       </li>
       <li class="form-field">
+        <label>Category</label>
+        <p class="help">
+          Wordpress category ID used to aggregate news and any other
+          kind of information about this answer
+        </p>
+        <input type="text" name="category" value="{{ contrib.category }}">
+      </li>
+      <li class="form-field">
         <label>Extra data</label>
         <p class="help">
           Useful data for the API consumer (in our case,
