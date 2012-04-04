@@ -64,17 +64,7 @@
       #{{ contrib.parent }}
       {% endif %}
     </div>
-    {% if contrib.parent == 0 %}
-    <div class="smenu">
-      <label>
-        <strong>Part of:</strong>
-        <input
-           default="{{ exec("wpgp__govr_get_part_string", contrib) }}"
-           type="text" id="contrib-part[{{ contrib.id }}]"
-           class="contrib-parts contrib-part[{{ contrib.part }}]"
-           value="{{ exec("wpgp__govr_get_parents_string", contrib) }}">
-      </label>
-    </div>
+    
 
     {% if exec("wpgp_govr_contrib_has_duplicates", contrib) %}
     <div class="duplications">
@@ -87,7 +77,6 @@
     </div>
     {% endif %}
 
-    {% endif %}
 
     {% if exec("wpgp_govr_contrib_has_children", contrib) %}
     <div class="children">
