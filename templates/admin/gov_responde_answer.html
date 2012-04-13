@@ -16,6 +16,11 @@
         <p class="help">The content of the Governor's answer</p>
         <textarea id="answer" name="answer">{{ contrib.answer }}</textarea>
       </li>
+      <li class="form-field"> 
+      	<label>Order</label>
+      	<p class="help">The order of answer (leave 0 to no specific order)</p>
+      	<input type="text" name="answer_order" value="{{ contrib.answer_order }}">
+      </li>
       <li class="form-field">
         <label>Date</label>
         <p class="help">The date when question was answered</p>

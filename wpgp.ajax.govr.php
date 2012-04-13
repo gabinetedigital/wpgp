@@ -93,10 +93,11 @@ function wpgp_ajax_govr_update_contrib() {
 function wpgp_ajax_govr_contrib_answer() {
     wpgp_db_govr_contrib_answer(
         $_POST['data']['id'],
-        $_POST['data']['answer'],
+        $_POST['data']['answer'],    	
         $_POST['data']['category'],
         $_POST['data']['date'],
-        $_POST['data']['data']);
+        $_POST['data']['data'],
+    	$_POST['data']['answer_order']);
     die("ok");
 }
 

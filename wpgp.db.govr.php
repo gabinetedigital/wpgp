@@ -84,24 +84,31 @@ function wpgp_db_govr_get_contribs($theme_id = null,
                         'answerdate' => 'contrib.answered_at',
                         'author' => 'user.display_name',
                         'title' => 'contrib.title',
-                        'score' => 'contrib.score'
+                        'score' => 'contrib.score',
+    					'rand' => 'rand()',
+    					'answer_order' => 'contrib.answer_order'   		
                         );
-
+	$answer_order = ', contrib.answer_order ASC ';
     /* Deciding the ASC/DESC direction depending on the first char of
-     * the $sortby var. If it starts with `-', it will be DESC. */
+     * the $sortby var. If it starts with `-', it will be DESC. 
+     * If it stars with '?', it will ignore direction (mostly use in case the sort field is a function)*/
     $direction = 'ASC';
     if ($sortby[0] === '-') {
         $direction = 'DESC';
         $sortby = substr($sortby, 1, strlen($sortby));
     }
-
+    elseif ($sortby[0] === '?'){
+    	$direction = '';
+    	$sortby = substr($sortby, 1, strlen($sortby));
+    }
+        
     /* Here we define which field will be used to sort the query */
     if (isset($sortfields[$sortby])) {
         $sortfield = $sortfields[$sortby];
     } else {
         $sortfield = 'contrib.id';
     }
-
+	
     $statusfilter = '';
     if (!empty($status)) {
         $statusfilter = " AND contrib.status = '$status' ";
@@ -123,7 +130,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
                    contrib.user_id = user.ID AND
                    contrib.deleted = 0)
                    $fromto $statusfilter $filter
-                   ORDER BY $sortfield $direction",
+                   ORDER BY $sortfield $direction $answer_order",
             array($theme_id));
     } else {
         $sql_base = "
@@ -132,7 +139,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
             WHERE (contrib.user_id = user.ID AND
                    contrib.deleted = 0)
                    $fromto $statusfilter $filter
-                   ORDER BY $sortfield $direction";
+                   ORDER BY $sortfield $direction $answer_order";
     }
 
     /* Finish building the select and execute it */
@@ -364,14 +371,16 @@ function wpgp_db_govr_get_user_stats($user) {
 }
 
 
-function wpgp_db_govr_contrib_answer($id, $answer, $category, $date, $data) {
+function wpgp_db_govr_contrib_answer($id, $answer, $category, $date, $data, $answer_order) {
     global $wpdb;
+   
     $wpdb->update(WPGP_GOVR_CONTRIB_TABLE,
                   array('answer'      => $answer,
                         'category'    => $category,
                         'answered_at' => wpgp__date_to_us($date),
                         'data'        => $data,
-                        'status'      => 'responded'
+                        'status'      => 'responded',
+                  		'answer_order'=> $answer_order
                   ),
                   array('id' => $id));
 }

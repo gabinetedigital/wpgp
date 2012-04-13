@@ -33,7 +33,8 @@ function save() {
                     answer: val('answer'),
                     category: val('category'),
                     date: val('answered_at'),
-                    data: val('data')
+                    data: val('data'),
+                    answer_order: val('answer_order')
                 }
             },
             success: function(data) {
