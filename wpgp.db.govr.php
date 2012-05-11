@@ -171,7 +171,8 @@ function wpgp_db_govr_get_contribs($theme_id = null,
         $c["aggregated"] = wpgp_db_govr_get_aggregated_contribs($c["id"]);
         $c["user_can_vote"] = \
             wpgp_db_govr_contrib_user_can_vote($c["id"], $user_id);
-        //$c["video"] = wpgd_videos_get_video($c["data"]);
+        $c["video"] = wpgd_videos_get_video_wpgp($c["data"]);
+        $c["video_sources"] = wpgd_videos_get_sources_wpgp($c["data"]);
         $ret[] = $c;
     }
     return array($ret, $count);
@@ -636,5 +637,25 @@ function wpgp_db_govr_get_summary($from, $to) {
     return $wpdb->get_row($sql, ARRAY_A);
 }
 
+// leo: 11/05/2012
+// Arrumar essas 2 functions quando migar o wpgd para o wpgp
+function wpgd_videos_get_video_wpgp($vid) {
+	global $wpdb;
+	$table = "wp_wpgd_admin_videos";
+	$sql = "
+	SELECT
+	id, title, date, author, description, thumbnail,
+	status, video_width, video_height
+	FROM $table
+	WHERE id = " . $vid;
+	return $wpdb->get_row($sql, ARRAY_A);
+}
 
+function wpgd_videos_get_sources_wpgp($vid) {
+	global $wpdb;
+	$table = "wp_wpgd_admin_videos_sources";
+	$sql = "SELECT id, url, REPLACE(format, '\\\\', '') as format
+	FROM $table WHERE video_id = $vid";
+	return $wpdb->get_results($wpdb->prepare($sql), ARRAY_A);
+}
 ?>
