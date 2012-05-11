@@ -21,7 +21,7 @@ function wpgp_govr_getThemes($args) {
     if (!is_array($args = _exapi_method_header($args))) {
         return $args;
     }
-    return wpgp_db_govr_get_themes();
+    return wpgp_db_govr_get_themes($args[1]);
 }
 
 
@@ -80,7 +80,8 @@ function wpgp_govr_getContribs($args) {
         $args[6], // to
         $args[7], // status
         $args[8], // filter
-        $args[9] ? $args[8] : WPGP_RESULTS_PER_PAGE // perpage
+        $args[9] ? $args[8] : WPGP_RESULTS_PER_PAGE, // perpage
+		$args[10]
     );
 }
 

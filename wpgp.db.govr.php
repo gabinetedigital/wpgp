@@ -33,9 +33,14 @@ function wpgp_db_govr_create_theme($name) {
     $wpdb->query($sql);
 }
 
-function wpgp_db_govr_get_themes() {
+function wpgp_db_govr_get_themes($statupagina = '') {
     global $wpdb;
     $sql = "SELECT * FROM ".WPGP_GOVR_THEME_TABLE;
+   	if ((!empty($statupagina)) && ($statupagina == 'resp') ) {
+    	$sql .= " where id in (select theme_id from wpgp_govr_contribs where status = 'responded') ";
+    }
+    
+    	
     $themes = $wpdb->get_results($sql, ARRAY_A);
     foreach ($themes as &$t) {
         $t['total_contributions'] =
@@ -75,7 +80,8 @@ function wpgp_db_govr_get_contribs($theme_id = null,
                                    $to = null,
                                    $status = '',
                                    $filter = null,
-                                   $perpage = WPGP_RESULTS_PER_PAGE) {
+                                   $perpage = WPGP_RESULTS_PER_PAGE,
+								   $statusedicao = '') {
     global $wpdb;
     $offset = $page * $perpage;
     $sortfields = array('id' => 'contrib.id' ,
@@ -113,6 +119,11 @@ function wpgp_db_govr_get_contribs($theme_id = null,
     if (!empty($status)) {
         $statusfilter = " AND contrib.status = '$status' ";
     }
+    
+    $statusfilterpage = '';
+    if ((!empty($statusedicao)) && ($statusedicao == 'ultima')) {
+    	$statusfilterpage = " AND contrib.status = 'responded' and contrib.answered_at = (select max(answered_at) from ".WPGP_GOVR_CONTRIB_TABLE.") ";
+    }
 
     $fromto = '';
     if($from && $to) {
@@ -129,7 +140,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
             WHERE (contrib.theme_id = %d AND
                    contrib.user_id = user.ID AND
                    contrib.deleted = 0)
-                   $fromto $statusfilter $filter
+                   $fromto $statusfilter $filter $statusfilterpage
                    ORDER BY $sortfield $direction $answer_order",
             array($theme_id));
     } else {
@@ -138,7 +149,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
                  wp_users user
             WHERE (contrib.user_id = user.ID AND
                    contrib.deleted = 0)
-                   $fromto $statusfilter $filter
+                   $fromto $statusfilter $filter $statusfilterpage
                    ORDER BY $sortfield $direction $answer_order";
     }
 
@@ -160,6 +171,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
         $c["aggregated"] = wpgp_db_govr_get_aggregated_contribs($c["id"]);
         $c["user_can_vote"] = \
             wpgp_db_govr_contrib_user_can_vote($c["id"], $user_id);
+        //$c["video"] = wpgd_videos_get_video($c["data"]);
         $ret[] = $c;
     }
     return array($ret, $count);
@@ -623,4 +635,6 @@ function wpgp_db_govr_get_summary($from, $to) {
             WHERE 1=1 $fromto";
     return $wpdb->get_row($sql, ARRAY_A);
 }
+
+
 ?>
