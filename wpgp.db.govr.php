@@ -262,6 +262,9 @@ function wpgp_db_govr_get_contrib($id, $user_id = null) {
     $c["aggregated"] = wpgp_db_govr_get_aggregated_contribs($c["id"]);
     $c["user_can_vote"] = \
         wpgp_db_govr_contrib_user_can_vote($c["id"], $user_id);
+    $c["theme"] = wpgp_db_govr_get_theme($c["theme_id"]);
+    $c["video"] = wpgd_videos_get_video_wpgp($c["data"]);
+    $c["video_sources"] = wpgd_videos_get_sources_wpgp($c["data"]);
     return $c;
 }
 
