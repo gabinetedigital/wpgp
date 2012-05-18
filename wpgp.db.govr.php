@@ -36,7 +36,7 @@ function wpgp_db_govr_create_theme($name) {
 function wpgp_db_govr_get_themes($statupagina = '') {
     global $wpdb;
     $sql = "SELECT * FROM ".WPGP_GOVR_THEME_TABLE;
-   	if ((!empty($statupagina)) && ($statupagina == 'resp') ) {
+   	if (!empty($statupagina)) {
     	$sql .= " where id in (select theme_id from wpgp_govr_contribs where status = 'responded') ";
     }
     
