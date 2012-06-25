@@ -90,7 +90,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
                         'answerdate' => 'contrib.answered_at',
                         'author' => 'user.display_name',
                         'title' => 'contrib.title',
-                        'score' => 'contrib.score',
+                        'score' => 'real_score',
     					'rand' => 'rand()',
     					'answer_order' => 'contrib.answer_order'   		
                         );
@@ -107,14 +107,14 @@ function wpgp_db_govr_get_contribs($theme_id = null,
     	$direction = '';
     	$sortby = substr($sortby, 1, strlen($sortby));
     }
-        
+
     /* Here we define which field will be used to sort the query */
     if (isset($sortfields[$sortby])) {
         $sortfield = $sortfields[$sortby];
     } else {
         $sortfield = 'contrib.id';
     }
-	
+    
     $statusfilter = '';
     if (!empty($status)) {
         $statusfilter = " AND contrib.status = '$status' ";
@@ -132,7 +132,15 @@ function wpgp_db_govr_get_contribs($theme_id = null,
         $fromto = " AND (DATE(contrib.created_at) > DATE($from) AND
                          DATE(contrib.created_at) < DATE($to)) ";
     }
-
+    
+    $sql_realscore = " ( SELECT	SUM(contrib1.score)
+    					 FROM   ".WPGP_GOVR_CONTRIB_TABLE." AS contrib1
+    							LEFT JOIN (".WPGP_GOVR_CONTRIBC_TABLE." AS cchild)
+    							ON (contrib1.id = cchild.children_id 
+    								AND cchild.inverse_id = contrib1.id)
+    					 WHERE  contrib1.id = contrib.id OR contrib1.parent = contrib.id
+    					) as real_score ";
+    
     if ($theme_id && !empty($theme_id)) {
         $sql_base = $wpdb->prepare("
             FROM ".WPGP_GOVR_CONTRIB_TABLE." contrib,
@@ -140,8 +148,7 @@ function wpgp_db_govr_get_contribs($theme_id = null,
             WHERE (contrib.theme_id = %d AND
                    contrib.user_id = user.ID AND
                    contrib.deleted = 0)
-                   $fromto $statusfilter $filter $statusfilterpage
-                   ORDER BY $sortfield $direction $answer_order",
+                   $fromto $statusfilter $filter $statusfilterpage",
             array($theme_id));
     } else {
         $sql_base = "
@@ -149,25 +156,27 @@ function wpgp_db_govr_get_contribs($theme_id = null,
                  wp_users user
             WHERE (contrib.user_id = user.ID AND
                    contrib.deleted = 0)
-                   $fromto $statusfilter $filter $statusfilterpage
-                   ORDER BY $sortfield $direction $answer_order";
+                   $fromto $statusfilter $filter $statusfilterpage";
     }
 
     /* Finish building the select and execute it */
-    $sql = "SELECT contrib.*, user.display_name as display_name  $sql_base ";
+    $sql = "SELECT contrib.*, user.display_name as display_name, $sql_realscore  $sql_base 
+    		ORDER BY $sortfield $direction $answer_order ";
     $sql = $wpdb->prepare($sql . " LIMIT %d, %d", array($offset, $perpage));
     $listing = $wpdb->get_results($sql, ARRAY_A);
-
+	
     /* Counting how many results were returned (without the LIMIT
      * statement) */
     $sql = $wpdb->prepare("SELECT COUNT(*) $sql_base");
     $count = $wpdb->get_var($sql);
 
+    
     /* Filling out some things this function does not find */
     $ret = array();
     foreach ($listing as $c) {
         $c["theme"] = wpgp_db_govr_get_theme($c["theme_id"]);
-        $c["real_score"] = wpgp_db_govr_get_contrib_score($c["id"]);
+        $c["leo"] = $sql; 
+        //$c["real_score"] = wpgp_db_govr_get_contrib_score($c["id"]);
         $c["aggregated"] = wpgp_db_govr_get_aggregated_contribs($c["id"]);
         $c["user_can_vote"] = \
             wpgp_db_govr_contrib_user_can_vote($c["id"], $user_id);
