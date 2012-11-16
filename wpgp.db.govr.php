@@ -654,25 +654,28 @@ function wpgp_db_govr_get_summary($from, $to) {
 function wpgd_videos_get_video_wpgp($vid) {
 	global $wpdb;
 	$table = "wp_wpgd_admin_videos";
+  if($vid==""){
+    $vid="id";
+  }
 	$sql = "
 	SELECT
 	id, title, date, author, description, thumbnail,
 	status, video_width, video_height
-	FROM $table";
-  if( $vid != "" ){
-    $sql += "WHERE id = $vid";
-  }
+	FROM $table
+  WHERE id = $vid";
+  error_log("-> SQL VIDEO:".$sql);
 	return $wpdb->get_row($sql, ARRAY_A);
 }
 
 function wpgd_videos_get_sources_wpgp($vid) {
 	global $wpdb;
 	$table = "wp_wpgd_admin_videos_sources";
-	$sql = "SELECT id, url, REPLACE(format, '\\\\', '') as format
-	FROM $table ";
-  if( $vid != "" ){
-    $sql += "WHERE video_id = $vid";
+  if($vid==""){
+    $vid="video_id";
   }
+	$sql = "SELECT id, url, REPLACE(format, '\\\\', '') as format
+	FROM $table
+  WHERE video_id = $vid";
 	return $wpdb->get_results($wpdb->prepare($sql), ARRAY_A);
 }
 ?>
